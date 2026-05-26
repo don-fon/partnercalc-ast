@@ -1,49 +1,52 @@
-name: Deploy
+name: Deploy to GitHub Pages
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
 
 jobs:
-  deploy:
-    name: Deploy
+  build:
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v1
-      with:
-        node-version: '18'
-        registry-url: 'https://registry.npmjs.org'
+      - uses: actions/checkout@v4
 
-    - name: Get path to yarn cache
-      id: yarn-cache-path
-      run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
 
-    - uses: actions/cache@v4
-      with:
-        path: ${{ steps.yarn-cache-path.outputs.dir }}
-        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-yarn-
-    - name: Install node_modules
-      run: yarn install --prefer-offline
+      - run: npm ci
 
-    - name: Configure .env for prod
-      run: |
-        touch .env
-        printf "${{ secrets.PROD_ENV }}" >> .env
+      # build with env vars
+      - name: Build
+        run: npm run build
+        env:
+          NODE_ENV: production
+          REPO_NAME: ${{ github.event.repository.name }}
+          FFLOGS_API_KEY: ${{ secrets.FFLOGS_API_KEY }}
+          FFLOGS_API_URL: ${{ vars.FFLOGS_API_URL }}
+          ETRO_API_URL: ${{ vars.ETRO_API_URL }}
 
-    - name: Build
-      run: yarn build
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
 
-    - name: Release
-      uses: appleboy/scp-action@master
-      with:
-        host: ${{ secrets.SSH_HOST }}
-        username: ${{ secrets.SCP_USER }}
-        key: ${{ secrets.SSH_KEY }}
-        source: "dist"
-        target: ${{ secrets.DEPLOY_DIR }}
-        strip_components: 1
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
