@@ -1,4 +1,4 @@
-import { CircularProgress } from '@material-ui/core'
+import CircularProgress from '@mui/material/CircularProgress'
 import { Friend } from 'api/fflogs/fight'
 import { FFLogsParser } from 'api/fflogs/parser'
 import { useAsyncError } from 'components/ErrorBoundary/throwError'

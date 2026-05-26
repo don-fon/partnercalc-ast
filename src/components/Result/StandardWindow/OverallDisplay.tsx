@@ -1,11 +1,9 @@
-import {
-    Accordion,
-    AccordionDetails,
-    AccordionSummary,
-    Card,
-    Typography,
-} from '@material-ui/core'
-import { ExpandMore } from '@material-ui/icons'
+import Accordion from '@mui/material/Accordion'
+import AccordionDetails from '@mui/material/AccordionDetails'
+import AccordionSummary from '@mui/material/AccordionSummary'
+import Card from '@mui/material/Card'
+import Typography from '@mui/material/Typography'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import React from 'react'
 import { OverallDamage } from 'types'
 import { DamageGraph } from './DamageGraph/DamageGraph'
@@ -23,7 +21,7 @@ export function OverallDisplay(props: OverallDisplayProps) {
 
     return <div className={styles.overallWindow}>
         <div className={styles.overallText}>
-            <Typography variant="h3" align="center">
+            <Typography variant="h3" textAlign="center">
                 整体最佳舞伴：
             </Typography>
             <NameChip
@@ -38,7 +36,7 @@ export function OverallDisplay(props: OverallDisplayProps) {
             />
         </div>
         <div className={styles.overallText}>
-            <Typography variant="h5" align="center">
+            <Typography variant="h5" textAlign="center">
                 预期 DPS：{props.formatDPS(best.totals.total)}
             </Typography>
         </div>
@@ -51,7 +49,7 @@ export function OverallDisplay(props: OverallDisplayProps) {
                 className={styles.accordion}
             >
                 <AccordionSummary
-                    expandIcon={<ExpandMore />}
+                    expandIcon={<ExpandMoreIcon />}
                     aria-controls="panel1-content"
                     id="panel1-header"
                 >

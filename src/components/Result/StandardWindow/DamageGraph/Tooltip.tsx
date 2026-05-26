@@ -1,4 +1,4 @@
-import { Typography } from '@material-ui/core'
+import Typography from '@mui/material/Typography'
 import React from 'react'
 import { TooltipProps } from 'recharts'
 import { formatDamage } from 'util/format'

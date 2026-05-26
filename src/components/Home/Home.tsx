@@ -1,4 +1,9 @@
-import { Grid, TextField, Box, Typography, Checkbox, FormControlLabel } from '@material-ui/core'
+import Box from '@mui/material/Box'
+import Checkbox from '@mui/material/Checkbox'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import Grid from '@mui/material/Grid'
+import TextField from '@mui/material/TextField'
+import Typography from '@mui/material/Typography'
 import { fetchLastFightID } from 'api/fflogs/api'
 import { useTitle } from 'components/Title'
 import React, { useEffect, useState } from 'react'
@@ -66,12 +71,12 @@ export function Home() {
     return <div className={styles.home}>
         <Box p={2}>
             <Box mb={1}>
-                <Typography variant="h6" color="textPrimary">
+                <Typography variant="h6" color="text.primary">
                     输入 FFLogs 报告链接以开始分析。
                 </Typography>
             </Box>
             <Grid container spacing={8} alignItems="flex-end">
-                <Grid item md={true} sm={true} xs={true}>
+                <Grid size="grow">
                     <TextField
                         id="fflogs"
                         variant="outlined"

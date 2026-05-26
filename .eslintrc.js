@@ -71,7 +71,7 @@ module.exports = {
         'jsx-quotes': 'error',
         'key-spacing': ['warn', { mode: 'minimum' }],
         'keyword-spacing': 'warn',
-        'linebreak-style': ['error', 'unix'],
+        'linebreak-style': 'off',
         'newline-per-chained-call': ['warn', { ignoreChainWithDepth: 3 }],
         'new-parens': 'error',
         'no-alert': 'error',

@@ -1,4 +1,6 @@
-import { Button, TextField, Typography } from '@material-ui/core'
+import Button from '@mui/material/Button'
+import TextField from '@mui/material/TextField'
+import Typography from '@mui/material/Typography'
 import { Fight } from 'api/fflogs/fight'
 import { FFLogsParser } from 'api/fflogs/parser'
 import { useAsyncError } from 'components/ErrorBoundary/throwError'

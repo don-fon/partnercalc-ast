@@ -1,4 +1,7 @@
-import { AppBar, createTheme, ThemeProvider, Toolbar, Typography } from '@material-ui/core'
+import AppBar from '@mui/material/AppBar'
+import { createTheme, ThemeProvider } from '@mui/material/styles'
+import Toolbar from '@mui/material/Toolbar'
+import Typography from '@mui/material/Typography'
 import React from 'react'
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom'
 import styles from './App.module.css'
@@ -13,7 +16,7 @@ import { TitleProvider } from './Title'
 
 const theme = createTheme({
     palette: {
-        type: 'dark',
+        mode: 'dark',
         primary: {
             main: '#f48fb1',
         },
@@ -27,23 +30,29 @@ const theme = createTheme({
             color: '#ffffff',
         },
     },
-    overrides: {
+    components: {
         MuiPaper: {
-            root: {
-                backgroundColor: '#28282c',
+            styleOverrides: {
+                root: {
+                    backgroundColor: '#28282c',
+                },
             },
         },
         MuiChip: {
-            root: {
-                backgroundColor: '#424242',
+            styleOverrides: {
+                root: {
+                    backgroundColor: '#424242',
+                },
             },
         },
         MuiTableCell: {
-            root: {
-                fontSize: '1rem',
-            },
-            head: {
-                fontWeight: 'bold',
+            styleOverrides: {
+                root: {
+                    fontSize: '1rem',
+                },
+                head: {
+                    fontWeight: 'bold',
+                },
             },
         },
     },
@@ -90,7 +99,7 @@ export function App() {
                     <Toolbar>
                         <div className={styles.logo} onClick={goHome}>
                             <img src="/logo.png" />
-                            <Typography variant="h5" align="center">
+                            <Typography variant="h5" textAlign="center">
                                 舞伴计算
                             </Typography>
                         </div>

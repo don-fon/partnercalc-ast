@@ -1,5 +1,6 @@
-import { Chip, ChipProps } from '@material-ui/core'
-import { AccessTime } from '@material-ui/icons'
+import Chip from '@mui/material/Chip'
+import type { ChipProps } from '@mui/material/Chip'
+import AccessTime from '@mui/icons-material/AccessTime'
 import React from 'react'
 import { Job } from 'types'
 

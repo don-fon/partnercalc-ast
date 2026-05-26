@@ -1,10 +1,8 @@
-import {
-    Accordion,
-    AccordionDetails,
-    AccordionSummary,
-    Card,
-} from '@material-ui/core'
-import { ExpandMore } from '@material-ui/icons'
+import Accordion from '@mui/material/Accordion'
+import AccordionDetails from '@mui/material/AccordionDetails'
+import AccordionSummary from '@mui/material/AccordionSummary'
+import Card from '@mui/material/Card'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Friend } from 'api/fflogs/fight'
 import React, { useState } from 'react'
 import { ComputedWindow } from 'types'
@@ -78,7 +76,7 @@ export function StandardWindow(props: StandardWindowProps) {
                 className={styles.accordion}
             >
                 <AccordionSummary
-                    expandIcon={<ExpandMore />}
+                    expandIcon={<ExpandMoreIcon />}
                     aria-controls="panel1-content"
                     id="panel1-header"
                 >
@@ -94,7 +92,7 @@ export function StandardWindow(props: StandardWindowProps) {
                 className={styles.accordion}
             >
                 <AccordionSummary
-                    expandIcon={<ExpandMore />}
+                    expandIcon={<ExpandMoreIcon />}
                     aria-controls="panel2-content"
                     id="panel2-header"
                 >

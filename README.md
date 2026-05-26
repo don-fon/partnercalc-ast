@@ -12,7 +12,6 @@ A tool for analyzing Dance Partner damage contribution in FFXIV.
 
 * [git](https://git-scm.com/)
 * [node.js](https://nodejs.org/en/)
-* [yarn](https://yarnpkg.com/)
 
 1. Clone the repo:
 
@@ -26,7 +25,7 @@ A tool for analyzing Dance Partner damage contribution in FFXIV.
 2. Install dependencies:
 
 ```bash
-> yarn install
+> npm install
 ```
 
 3. Set environment variables:
@@ -37,7 +36,7 @@ A tool for analyzing Dance Partner damage contribution in FFXIV.
 4. Launch the dev server:
 
 ```bash
-> yarn serve
+> npm run serve
 ```
 
 You should now be able to access the site at http://localhost:7000.
