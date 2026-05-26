@@ -2,6 +2,7 @@ import Card from '@mui/material/Card'
 import Typography from '@mui/material/Typography'
 import React from 'react'
 import { ComputedWindow, OverallDamage } from 'types'
+import { CARD_LABELS, CardIcon } from '../CardIcon'
 import styles from './StandardWindow.module.css'
 import { NameChip, TimestampChip } from '../Chip'
 
@@ -10,11 +11,6 @@ interface OverallDisplayProps {
     windows: ComputedWindow[]
     formatDPS: (damage: number) => string
     formatTimestamp: (time: number) => string
-}
-
-const CARD_LABELS = {
-    balance: '太阳神之衡',
-    spear: '战争神之枪',
 }
 
 const getWindowAnchorID = (start: number) => `card-window-${start}`
@@ -26,12 +22,15 @@ export function OverallDisplay(props: OverallDisplayProps) {
     const maxOptimal = Math.max(...props.windows.map(window => window.bestPartner.totals.total))
 
     const renderCardSummary = (
-        name: string,
+        cardType: ComputedWindow['cardType'],
         actual: number,
         optimal: number,
         delta: number,
     ) => <div className={styles.summaryRow}>
-        <Typography>{name}</Typography>
+        <div className={styles.cardLabel}>
+            <CardIcon cardType={cardType} className={styles.cardLabelIcon} />
+            <Typography>{CARD_LABELS[cardType]}</Typography>
+        </div>
         <Typography>实际 {props.formatDPS(actual)}</Typography>
         <Typography>逐卡最优 {props.formatDPS(optimal)}</Typography>
         <Typography>差值 {props.formatDPS(delta)}</Typography>
@@ -49,7 +48,10 @@ export function OverallDisplay(props: OverallDisplayProps) {
         const windows = props.windows.filter(window => window.cardType === cardType)
 
         return <div className={styles.cardDecisionGroup}>
-            <Typography variant="h5">{CARD_LABELS[cardType]}</Typography>
+            <div className={styles.cardDecisionTitle}>
+                <CardIcon cardType={cardType} className={styles.cardTitleIcon} />
+                <Typography variant="h5">{CARD_LABELS[cardType]}</Typography>
+            </div>
             <div className={styles.cardDecisionList}>
                 {windows.map(window => {
                     const actual = window.actualPartner
@@ -130,13 +132,13 @@ export function OverallDisplay(props: OverallDisplayProps) {
         </div>
         <div className={styles.summaryRows}>
             {renderCardSummary(
-                '太阳神之衡',
+                'balance',
                 props.damage.balance.actual,
                 props.damage.balance.optimal,
                 balanceImprovement,
             )}
             {renderCardSummary(
-                '战争神之枪',
+                'spear',
                 props.damage.spear.actual,
                 props.damage.spear.optimal,
                 spearImprovement,

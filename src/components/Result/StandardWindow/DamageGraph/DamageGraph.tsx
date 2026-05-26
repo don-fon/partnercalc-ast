@@ -4,13 +4,12 @@ import {
     BarChart,
     Cell,
     CartesianGrid,
-    Legend,
     ResponsiveContainer,
     Tooltip,
     XAxis,
     YAxis,
 } from 'recharts'
-import { ComputedPlayer } from 'types'
+import { CardType, ComputedPlayer } from 'types'
 import { formatDamage } from 'util/format'
 import styles from './DamageGraph.module.css'
 import { GraphTooltip } from './Tooltip'
@@ -18,13 +17,14 @@ import { GraphTooltip } from './Tooltip'
 interface DamageGraphProps {
     players: ComputedPlayer[]
     actualPlayer: ComputedPlayer
+    cardType: CardType
 }
 
 export function DamageGraph(props: DamageGraphProps) {
+    const card = CARD_GRAPH_CONFIG[props.cardType]
     const data = props.players.map(player => ({
         name: player.name,
-        '太阳神之衡': Math.floor(player.totals.balance),
-        '战争神之枪': Math.floor(player.totals.spear),
+        [card.label]: Math.floor(player.totals[props.cardType]),
     }))
 
     return <div className={styles.standardGraph}>
@@ -60,28 +60,31 @@ export function DamageGraph(props: DamageGraphProps) {
                     wrapperStyle={{ outline: 'none' }}
                     content={<GraphTooltip />}
                 />
-                <Legend />
                 <CartesianGrid horizontal={false} vertical={true} opacity={0.5} />
-                <Bar dataKey="太阳神之衡" barSize={30} stackId="a" fill="#e0e158">
+                <Bar dataKey={card.label} barSize={30} fill={card.color}>
                     {props.players.map(player =>
                         <Cell
                             key={player.id}
-                            fill={player.id === props.actualPlayer.id ? '#ffb74d' : '#e0e158'}
+                            fill={player.id === props.actualPlayer.id ? card.actualColor : card.color}
                         />
                     )}
                 </Bar>
-                <Bar dataKey="战争神之枪" barSize={30} stackId="a" fill="#0fe863">
-                    {props.players.map(player =>
-                        <Cell
-                            key={player.id}
-                            fill={player.id === props.actualPlayer.id ? '#ffb74d' : '#0fe863'}
-                        />
-                    )}
-                </Bar>
-
             </BarChart>
         </ResponsiveContainer>
     </div>
+}
+
+const CARD_GRAPH_CONFIG = {
+    balance: {
+        label: '太阳神之衡',
+        color: '#f0a33a',
+        actualColor: '#ffcc66',
+    },
+    spear: {
+        label: '战争神之枪',
+        color: '#7897ff',
+        actualColor: '#b18cff',
+    },
 }
 
 interface AxisTickProps {

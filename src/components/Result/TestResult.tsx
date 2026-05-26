@@ -11,6 +11,7 @@ import { generateFFLogsTimelineLink } from './fflogsLinks'
 import styles from './Result.module.css'
 import { OverallDisplay } from './StandardWindow/OverallDisplay'
 import { StandardWindow } from './StandardWindow/StandardWindow'
+import { TimelineSidebar } from './TimelineSidebar'
 
 const FIXTURE_URL = '/fixtures/fflogs-test-fixture.json'
 
@@ -77,23 +78,28 @@ export function TestResult() {
 
     return <div>
         <div className={styles.fadeTop} />
-        <div className={styles.result}>
-            <OverallDisplay
-                damage={overall}
+        <div className={styles.resultLayout}>
+            <div className={styles.result}>
+                <OverallDisplay
+                    damage={overall}
+                    windows={windows}
+                    formatDPS={formatDPS}
+                    formatTimestamp={parser.formatTimestamp}
+                />
+                {windows.map(window =>
+                    <StandardWindow
+                        window={window}
+                        formatTimestamp={parser.formatTimestamp}
+                        generateTimestampLink={generateTimestampLink}
+                        key={window.start}
+                    />
+                )}
+                <div className={styles.fadeBottom} />
+            </div>
+            <TimelineSidebar
                 windows={windows}
-                formatDPS={formatDPS}
                 formatTimestamp={parser.formatTimestamp}
             />
-            {windows.map(window =>
-                <StandardWindow
-                    window={window}
-                    astrologian={astrologian}
-                    formatTimestamp={parser.formatTimestamp}
-                    generateTimestampLink={generateTimestampLink}
-                    key={window.start}
-                />
-            )}
         </div>
-        <div className={styles.fadeBottom} />
     </div>
 }

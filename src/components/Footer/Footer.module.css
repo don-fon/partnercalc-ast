@@ -1,9 +1,5 @@
-.iconRoot {
-    text-align: center;
-}
-
-.icon {
-    display: flex;
-    height: inherit;
-    width: inherit;
+.link {
+    color: inherit;
+    text-decoration-color: currentColor;
+    text-underline-offset: 0.15rem;
 }

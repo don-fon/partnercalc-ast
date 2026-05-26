@@ -1,7 +1,9 @@
 import Typography from '@mui/material/Typography'
 import React from 'react'
 import { TooltipProps } from 'recharts'
+import { CardType } from 'types'
 import { formatDamage } from 'util/format'
+import { CardIcon } from '../../CardIcon'
 import styles from './Tooltip.module.css'
 
 export const GraphTooltip = ({
@@ -12,13 +14,12 @@ export const GraphTooltip = ({
     if (active && payload && payload.length > 0) {
         const items = payload.filter(item => item.value != null && item.value > 0)
 
-        const getLegendClass = (label: string) => {
+        const getCardType = (label: string): CardType => {
             if (label === '太阳神之衡') {
-                return styles.standard
+                return 'balance'
             }
-            if (label === '战争神之枪') {
-                return styles.devilment
-            }
+
+            return 'spear'
         }
 
         return <div className={styles.container}>
@@ -29,7 +30,10 @@ export const GraphTooltip = ({
             </div>
             {items.map(item =>
                 <div className={styles.content} key={item.dataKey}>
-                    <span className={getLegendClass(item.name)} />
+                    <CardIcon
+                        cardType={getCardType(item.name)}
+                        className={styles.cardIcon}
+                    />
                     <div className={styles.label}>
                         <Typography>{item.name}</Typography>
                     </div>

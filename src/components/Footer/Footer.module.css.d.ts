@@ -2,8 +2,7 @@
 /* eslint-disable */
 declare namespace FooterModuleCssNamespace {
   export interface IFooterModuleCss {
-    icon: string;
-    iconRoot: string;
+    link: string;
   }
 }
 

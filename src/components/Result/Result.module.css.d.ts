@@ -6,6 +6,19 @@ declare namespace ResultModuleCssNamespace {
     fadeTop: string;
     loading: string;
     result: string;
+    resultLayout: string;
+    timelineCard: string;
+    timelineCardIcon: string;
+    timelineContent: string;
+    timelineItem: string;
+    timelineItemOptimal: string;
+    timelineJobIcon: string;
+    timelineJobIconFrame: string;
+    timelineList: string;
+    timelineMarker: string;
+    timelineSidebar: string;
+    timelineTarget: string;
+    timelineTime: string;
   }
 }
 

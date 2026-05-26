@@ -17,20 +17,20 @@ declare namespace StandardWindowModuleCssNamespace {
     cardDecisionMeta: string;
     cardDecisionOptimalBar: string;
     cardDecisionTarget: string;
-    dancer: string;
+    cardDecisionTitle: string;
+    cardLabel: string;
+    cardLabelIcon: string;
+    cardTitleIcon: string;
     graph: string;
+    graphToolbar: string;
     overallChip: string;
     overallText: string;
     overallWindow: string;
-    partnered: string;
-    partneredText: string;
-    rowContainer: string;
     standardWindow: string;
     summaryGrid: string;
     summaryItem: string;
     summaryRow: string;
     summaryRows: string;
-    timestamp: string;
   }
 }
 

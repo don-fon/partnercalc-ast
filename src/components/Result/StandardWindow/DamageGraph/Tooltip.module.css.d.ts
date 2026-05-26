@@ -2,13 +2,11 @@
 /* eslint-disable */
 declare namespace TooltipModuleCssNamespace {
   export interface ITooltipModuleCss {
+    cardIcon: string;
     container: string;
     content: string;
-    devilment: string;
-    esprit: string;
     header: string;
     label: string;
-    standard: string;
     value: string;
   }
 }
