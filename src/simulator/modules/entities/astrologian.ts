@@ -10,11 +10,21 @@ export class Astrologian extends Entity {
     public id: number
     private emitWindow: CardWindowHook
     private windowsByTargetAndCard: Map<string, CardWindow> = new Map()
+    private fightStart: number
+    private fightEnd: number
 
-    constructor(id: number, cardWindowHook: CardWindowHook, data: DataProvider) {
+    constructor(
+        id: number,
+        cardWindowHook: CardWindowHook,
+        data: DataProvider,
+        fightStart: number,
+        fightEnd: number,
+    ) {
         super(id.toString(), data)
         this.id = id
         this.emitWindow = cardWindowHook
+        this.fightStart = fightStart
+        this.fightEnd = fightEnd
         this.init()
     }
 
@@ -52,7 +62,14 @@ export class Astrologian extends Entity {
     private openCardWindow(event: ApplyBuffEvent, cardType: CardType) {
         this.closeCardWindow(event.targetID, cardType, event.timestamp)
 
-        const window = new CardWindow(event.timestamp, event.targetID, cardType, this.data)
+        const window = new CardWindow(
+            event.timestamp,
+            event.targetID,
+            cardType,
+            this.data,
+            this.fightStart,
+            this.fightEnd,
+        )
         this.windowsByTargetAndCard.set(this.keyFor(event.targetID, cardType), window)
         this.emitWindow(window)
     }

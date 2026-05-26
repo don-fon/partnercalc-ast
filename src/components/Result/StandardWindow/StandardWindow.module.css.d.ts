@@ -21,6 +21,7 @@ declare namespace StandardWindowModuleCssNamespace {
     cardLabel: string;
     cardLabelIcon: string;
     cardTitleIcon: string;
+    dpsAccordion: string;
     graph: string;
     graphToolbar: string;
     overallChip: string;

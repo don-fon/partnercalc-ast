@@ -3,6 +3,7 @@ import { simulatePotencyBuff } from 'math/rdps'
 import { SnapshotHandler } from 'simulator/handlers/snapshots'
 import { Player } from 'simulator/modules/entities/player'
 import { Action, CardType, ComputedDamage, Effect, Job, Snapshot, Stats } from 'types'
+import { DamageEvent, TickEvent } from 'api/fflogs/event'
 
 export interface CardWindowInfo {
     stats: Stats
@@ -28,6 +29,7 @@ const CARD_ACTIONS: Record<CardType, Action> = {
 
 const CORRECT_CARD_POTENCY = 1.06
 const WRONG_CARD_POTENCY = 1.03
+export const CARD_CONTEXT_MS = 10000
 
 const BALANCE_JOBS = new Set([
     'Dark Knight',
@@ -46,16 +48,28 @@ export class CardWindow {
     public readonly start: number
     public readonly target: number
     public readonly cardType: CardType
+    private readonly fightStart: number
+    private readonly fightEnd: number
     public end?: number
 
     private readonly effect: Effect
     private readonly snapshots: SnapshotHandler = new SnapshotHandler()
+    private readonly contextDamageEvents: Array<DamageEvent | TickEvent> = []
     private readonly events: CardWindowEvent[] = []
 
-    constructor(start: number, target: number, cardType: CardType, data: DataProvider) {
+    constructor(
+        start: number,
+        target: number,
+        cardType: CardType,
+        data: DataProvider,
+        fightStart: number,
+        fightEnd: number,
+    ) {
         this.start = start
         this.target = target
         this.cardType = cardType
+        this.fightStart = fightStart
+        this.fightEnd = fightEnd
         this.effect = cardType === 'balance'
             ? data.effects.THE_BALANCE
             : data.effects.THE_SPEAR
@@ -93,12 +107,46 @@ export class CardWindow {
         }
     }
 
+    public processContextDamageEvent(event: DamageEvent | TickEvent) {
+        if (event.sourceID !== this.target) { return }
+        if (event.timestamp < this.start - CARD_CONTEXT_MS) { return }
+        if (this.end != null && event.timestamp > this.end + CARD_CONTEXT_MS) { return }
+
+        this.contextDamageEvents.push(event)
+    }
+
     public close(timestamp: number) {
         this.end = timestamp
     }
 
     public getEvents(): readonly CardWindowEvent[] {
         return this.events
+    }
+
+    public getTargetDpsPoints(fallbackEnd: number): { timestamp: number, dps: number }[] {
+        const start = Math.max(this.start - CARD_CONTEXT_MS, this.fightStart)
+        const end = Math.min((this.end ?? fallbackEnd) + CARD_CONTEXT_MS, this.fightEnd)
+        const buckets: Map<number, number> = new Map()
+
+        for (const event of this.contextDamageEvents) {
+            if (event.timestamp < start || event.timestamp > end) {
+                continue
+            }
+
+            const bucket = start + Math.floor((event.timestamp - start) / 1000) * 1000
+            buckets.set(bucket, (buckets.get(bucket) ?? 0) + event.amount)
+        }
+
+        const points: { timestamp: number, dps: number }[] = []
+
+        for (let timestamp = start; timestamp <= end; timestamp += 1000) {
+            points.push({
+                timestamp: timestamp,
+                dps: buckets.get(timestamp) ?? 0,
+            })
+        }
+
+        return points
     }
 
     private getEffectForJob(job: Job): Effect {

@@ -1,11 +1,17 @@
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import Accordion from '@mui/material/Accordion'
+import AccordionDetails from '@mui/material/AccordionDetails'
+import AccordionSummary from '@mui/material/AccordionSummary'
 import Card from '@mui/material/Card'
 import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
+import Typography from '@mui/material/Typography'
 import React from 'react'
 import { ComputedWindow } from 'types'
 import { DamageGraph } from './DamageGraph/DamageGraph'
 import styles from './StandardWindow.module.css'
+import { TargetDpsChart } from './TargetDpsChart'
 import { TimestampChip } from '../Chip'
 
 const getWindowAnchorID = (start: number) => `card-window-${start}`
@@ -45,6 +51,22 @@ export function StandardWindow(props: StandardWindowProps) {
                 actualPlayer={props.window.actualPartner}
                 cardType={props.window.cardType}
             />
+            <Accordion className={styles.dpsAccordion}>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    <Typography>
+                        发卡目标DPS曲线
+                    </Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <TargetDpsChart
+                        points={props.window.targetDps}
+                        cardType={props.window.cardType}
+                        start={props.window.start}
+                        end={props.window.end}
+                        formatTimestamp={props.formatTimestamp}
+                    />
+                </AccordionDetails>
+            </Accordion>
         </Card>
     </div>
 }

@@ -39,6 +39,16 @@
     gap: 0.25rem;
 }
 
+.dpsAccordion {
+    margin-top: 1rem;
+    background-color: #28282c !important;
+    box-shadow: none !important;
+}
+
+.dpsAccordion::before {
+    display: none;
+}
+
 .overallText {
     text-align: center;
     margin-bottom: 1rem;

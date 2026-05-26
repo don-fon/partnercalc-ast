@@ -1,4 +1,4 @@
-import { FFLogsEvent } from 'api/fflogs/event'
+import { DamageEvent, FFLogsEvent, TickEvent } from 'api/fflogs/event'
 import { Friend } from 'api/fflogs/fight'
 import { FFLogsParser } from 'api/fflogs/parser'
 import { DataProvider } from 'data/provider'
@@ -10,7 +10,7 @@ import {
     DamageTotals,
     OverallDamage,
 } from 'types'
-import { CardWindow } from './cardWindow'
+import { CARD_CONTEXT_MS, CardWindow } from './cardWindow'
 import { Snapshot } from '../types/snapshot'
 import { EnemyHandler } from './handlers/enemies'
 import { PlayerHandler } from './handlers/players'
@@ -32,12 +32,19 @@ export class Simulator {
     private players: PlayerHandler
     private statOverrides?: StatOverrides
     private cardWindows: CardWindow[] = []
+    private recentDamageEvents: Array<DamageEvent | TickEvent> = []
     private results: ComputedWindow[] = []
 
     constructor(parser: FFLogsParser, astrologian: Friend, statOverrides?: StatOverrides) {
         this.parser = parser
         this.data = new DataProvider()
-        this.astrologian = new Astrologian(astrologian.id, this.registerNewCardWindow, this.data)
+        this.astrologian = new Astrologian(
+            astrologian.id,
+            this.registerNewCardWindow,
+            this.data,
+            parser.fight.start,
+            parser.fight.end,
+        )
         this.enemies = new EnemyHandler(parser.fight.friends, this.data)
         this.statOverrides = statOverrides
 
@@ -197,24 +204,32 @@ export class Simulator {
             target: computedPlayers.find(player => player.id === event.targetID),
         }))
 
+        const windowEnd = window.end ?? this.parser.fight.end
+
         return {
             start: window.start,
-            end: window.end ?? this.parser.fight.end,
+            end: windowEnd,
             cardType: window.cardType,
             players: computedPlayers,
             actualPartner: computedPlayers.find(player => player.id === window.target),
             bestPartner: computedPlayers[0],
             events: events,
+            targetDps: window.getTargetDpsPoints(windowEnd),
         }
     }
 
     private processEvent(event: FFLogsEvent) {
         this.astrologian.processEvent(event)
+        this.processContextDamageEvent(event)
         this.players.processEvent(event)
         this.enemies.processEvent(event)
     }
 
     private registerNewCardWindow = (window: CardWindow) => {
+        for (const event of this.recentDamageEvents) {
+            window.processContextDamageEvent(event)
+        }
+
         this.cardWindows.push(window)
     }
 
@@ -228,10 +243,34 @@ export class Simulator {
         }
     }
 
+    private processContextDamageEvent(event: FFLogsEvent) {
+        if (event.type !== 'damage' && event.type !== 'tick') {
+            return
+        }
+
+        this.recentDamageEvents.push(event)
+        this.recentDamageEvents = this.recentDamageEvents.filter(
+            recent => event.timestamp - recent.timestamp <= CARD_CONTEXT_MS,
+        )
+
+        const contextWindows = this.getContextWindowsForTimestamp(event.timestamp)
+        for (const window of contextWindows) {
+            window.processContextDamageEvent(event)
+        }
+    }
+
     private getWindowsForTimestamp(time: number): CardWindow[] {
         return this.cardWindows.filter(window => {
             if (time <= window.start) { return false }
             if (window.end != null && time > window.end) { return false }
+            return true
+        })
+    }
+
+    private getContextWindowsForTimestamp(time: number): CardWindow[] {
+        return this.cardWindows.filter(window => {
+            if (time < window.start - CARD_CONTEXT_MS) { return false }
+            if (window.end != null && time > window.end + CARD_CONTEXT_MS) { return false }
             return true
         })
     }

@@ -33,6 +33,11 @@ export interface ComputedEvent {
     target?: ComputedPlayer
 }
 
+export interface ComputedDPSPoint {
+    timestamp: number
+    dps: number
+}
+
 export interface ComputedWindow {
     start: number
     end: number
@@ -41,6 +46,7 @@ export interface ComputedWindow {
     actualPartner: ComputedPlayer
     bestPartner: ComputedPlayer
     events: ComputedEvent[]
+    targetDps: ComputedDPSPoint[]
 }
 
 export interface OverallCardSummary {
