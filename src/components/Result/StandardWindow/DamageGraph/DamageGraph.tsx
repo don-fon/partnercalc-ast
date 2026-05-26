@@ -21,9 +21,9 @@ interface DamageGraphProps {
 export function DamageGraph(props: DamageGraphProps) {
     const data = props.players.map(player => ({
         name: player.name,
-        Standard: Math.floor(player.totals.standard),
-        Devilment: Math.floor(player.totals.devilment),
-        Esprit: Math.floor(player.totals.esprit),
+        '标准舞步': Math.floor(player.totals.standard),
+        '进攻之探戈': Math.floor(player.totals.devilment),
+        '伶俐': Math.floor(player.totals.esprit),
     }))
 
     return <div className={styles.standardGraph}>
@@ -61,9 +61,9 @@ export function DamageGraph(props: DamageGraphProps) {
                 />
                 <Legend />
                 <CartesianGrid horizontal={false} vertical={true} opacity={0.5} />
-                <Bar dataKey="Standard" barSize={30} stackId="a" fill="#e0e158" />
-                <Bar dataKey="Devilment" barSize={30} stackId="a" fill="#0fe863" />
-                <Bar dataKey="Esprit" barSize={30} stackId="a" fill="#3febde" />
+                <Bar dataKey="标准舞步" barSize={30} stackId="a" fill="#e0e158" />
+                <Bar dataKey="进攻之探戈" barSize={30} stackId="a" fill="#0fe863" />
+                <Bar dataKey="伶俐" barSize={30} stackId="a" fill="#3febde" />
 
             </BarChart>
         </ResponsiveContainer>

@@ -24,7 +24,7 @@ export function OverallDisplay(props: OverallDisplayProps) {
     return <div className={styles.overallWindow}>
         <div className={styles.overallText}>
             <Typography variant="h3" align="center">
-                Overall best partner:
+                整体最佳舞伴：
             </Typography>
             <NameChip
                 name={best.name}
@@ -39,7 +39,7 @@ export function OverallDisplay(props: OverallDisplayProps) {
         </div>
         <div className={styles.overallText}>
             <Typography variant="h5" align="center">
-                Expected DPS: {props.formatDPS(best.totals.total)}
+                预期 DPS：{props.formatDPS(best.totals.total)}
             </Typography>
         </div>
         <Card className={styles.card + ' ' + styles.graph}>
@@ -55,7 +55,7 @@ export function OverallDisplay(props: OverallDisplayProps) {
                     aria-controls="panel1-content"
                     id="panel1-header"
                 >
-                    Damage Table
+                    伤害表
                 </AccordionSummary>
                 <AccordionDetails className={styles.accordionContent}>
                     <DamageTable players={props.damage.players} formatDPS={props.formatDPS} />

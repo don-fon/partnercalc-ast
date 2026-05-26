@@ -11,7 +11,7 @@ export function Home() {
     const navigate = useNavigate()
     const { setTitle } = useTitle()
 
-    useEffect(() => setTitle('Home'))
+    useEffect(() => setTitle('首页'))
 
     const decomposeFFLogsURL = (url: URL) => {
         const report = url.pathname.replace('/reports/', '')
@@ -67,7 +67,7 @@ export function Home() {
         <Box p={2}>
             <Box mb={1}>
                 <Typography variant="h6" color="textPrimary">
-                    Enter your FFLogs report link to get started.
+                    输入 FFLogs 报告链接以开始分析。
                 </Typography>
             </Box>
             <Grid container spacing={8} alignItems="flex-end">
@@ -80,7 +80,7 @@ export function Home() {
                         onChange={onFFlogsChange}
                     />
                     <FormControlLabel
-                        label="Use exact stats"
+                        label="使用精确属性"
                         control={
                             <Checkbox
                                 checked={useExactStats}
@@ -93,7 +93,7 @@ export function Home() {
             <Box mb={1}>
                 {hasError &&
                     <Typography color="error">
-                     * Not a valid FFLogs report url.
+                     * 不是有效的 FFLogs 报告链接。
                     </Typography>
                 }
             </Box>

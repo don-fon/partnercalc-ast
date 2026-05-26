@@ -57,7 +57,7 @@ export function StandardWindow(props: StandardWindowProps) {
                         job={props.dancer.job}
                         className={styles.dancer}
                     />
-                    <span className={styles.partneredText}>partnered</span>
+                    <span className={styles.partneredText}>舞伴</span>
                     <NameChip name={partner.name} job={partner.job} />
                 </div>
                 <div className={styles.timestamp}>
@@ -82,7 +82,7 @@ export function StandardWindow(props: StandardWindowProps) {
                     aria-controls="panel1-content"
                     id="panel1-header"
                 >
-                    Damage Table
+                    伤害表
                 </AccordionSummary>
                 <AccordionDetails className={styles.accordionContent}>
                     <DamageTable players={props.window.players} formatDPS={formatDPS} />
@@ -98,7 +98,7 @@ export function StandardWindow(props: StandardWindowProps) {
                     aria-controls="panel2-content"
                     id="panel2-header"
                 >
-                    Dance Log
+                    舞者日志
                 </AccordionSummary>
                 <AccordionDetails className={styles.accordionContent}>
                     <DanceLog

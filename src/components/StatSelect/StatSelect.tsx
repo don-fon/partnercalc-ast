@@ -55,7 +55,7 @@ export const StatSelect = () => {
     }>({})
     const asyncThrow = useAsyncError()
 
-    setTitle('Enter stats')
+    setTitle('输入属性')
 
     const navigateToResults = () => {
         const searchParams = Object.entries(stats)
@@ -117,26 +117,26 @@ export const StatSelect = () => {
                         <StatInput
                             id="crit"
                             variant="outlined"
-                            placeholder="Crit"
+                            placeholder="暴击"
                             onChange={updateStats(friend.id, 'crit')}
                         />
                         <StatInput
                             id="dh"
                             variant="outlined"
-                            placeholder="DH"
+                            placeholder="直击"
                             onChange={updateStats(friend.id, 'dh')}
                         />
                     </FriendItem>
                 ))}
             </FriendContainer>
             <Typography variant="h6">
-                Enter each player's crit / DH stats as they were in the log (including food).
+                输入每个玩家的暴击/直击属性值，含食物加成。
             </Typography>
             <Typography variant="h6">
-                Leave inputs blank to estimate stats from the log!
+                留空以从日志中估算。
             </Typography>
             <Button onClick={navigateToResults} variant="outlined">
-                Calculate
+                计算
             </Button>
         </StatSelectContainer>
     )

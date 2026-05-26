@@ -91,7 +91,7 @@ export function App() {
                         <div className={styles.logo} onClick={goHome}>
                             <img src="/logo.png" />
                             <Typography variant="h5" align="center">
-                                partnercalc
+                                舞伴计算
                             </Typography>
                         </div>
                     </Toolbar>

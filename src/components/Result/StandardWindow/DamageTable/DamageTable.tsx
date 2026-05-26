@@ -28,15 +28,15 @@ export function DamageTable(props: DamageTableProps) {
     }
 
     return <TableContainer>
-        <Table aria-label="Damage table">
+        <Table aria-label="伤害表">
             <TableHead>
                 <TableRow>
-                    <TableCell>Name</TableCell>
-                    <TableCell>Job</TableCell>
-                    <TableCell>Standard</TableCell>
-                    <TableCell>Devilment</TableCell>
-                    <TableCell>Esprit</TableCell>
-                    <TableCell>Total</TableCell>
+                    <TableCell>名称</TableCell>
+                    <TableCell>职业</TableCell>
+                    <TableCell>标准舞步</TableCell>
+                    <TableCell>进攻之探戈</TableCell>
+                    <TableCell>伶俐</TableCell>
+                    <TableCell>总计</TableCell>
                     <TableCell>DPS</TableCell>
                 </TableRow>
             </TableHead>
