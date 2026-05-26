@@ -1,10 +1,10 @@
+import GitHubIcon from '@mui/icons-material/GitHub'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import Icon from '@mui/material/Icon'
 import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
-import GitHubIcon from '@mui/icons-material/GitHub'
 import * as React from 'react'
 import styles from './Footer.module.css'
 

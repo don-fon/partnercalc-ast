@@ -9,6 +9,7 @@ import { useParams, useSearchParams } from 'react-router-dom'
 import { Simulator } from 'simulator/simulator'
 import { ComputedWindow, OverallDamage } from 'types'
 import { formatDamage } from 'util/format'
+import { generateFFLogsTimelineLink } from './fflogsLinks'
 import styles from './Result.module.css'
 import { OverallDisplay } from './StandardWindow/OverallDisplay'
 import { StandardWindow } from './StandardWindow/StandardWindow'
@@ -20,7 +21,7 @@ export function Result() {
     const [ready, setReady] = useState<boolean>(false)
     const [windows, setWindows] = useState<ComputedWindow[]>([])
     const [overall, setOverall] = useState<OverallDamage>()
-    const [dancer, setDancer] = useState<Friend>()
+    const [astrologian, setAstrologian] = useState<Friend>()
     const asyncThrow = useAsyncError()
 
     const parser = useMemo(() => {
@@ -31,14 +32,15 @@ export function Result() {
         const simulate = async () => {
             await parser.init()
 
-            const dancer = parser.fight.friends
-                .find(friend => friend.job === JOBS.Dancer)
+            const astrologian = parser.fight.friends
+                .find(friend => friend.job === JOBS.Astrologian)
 
-            if (dancer == null) {
-                asyncThrow(new Error('Report does not have a Dancer.'))
+            if (astrologian == null) {
+                asyncThrow(new Error('该报告中没有占星。'))
+                return
             }
 
-            setDancer(dancer)
+            setAstrologian(astrologian)
 
             const statOverrides: { [friendID: number]: { crit: number, dh: number } } = {}
 
@@ -47,11 +49,11 @@ export function Result() {
                 statOverrides[parseInt(friendID)] = { crit, dh }
             }
 
-            const simulator = new Simulator(parser, dancer, statOverrides)
-            const windows = await simulator.calculatePartnerDamage()
+            const simulator = new Simulator(parser, astrologian, statOverrides)
+            const windows = await simulator.calculateCardDamage()
 
             if (windows.length <= 0) {
-                asyncThrow(new Error('Are you sure the Dancer had a partner?'))
+                asyncThrow(new Error('占星发过卡吗？'))
             }
 
             setWindows(windows)
@@ -59,19 +61,23 @@ export function Result() {
             setReady(true)
         }
         simulate().catch(console.error)
-    }, [asyncThrow, parser, setReady, setWindows])
+    }, [asyncThrow, parser, searchParams, setReady, setWindows])
 
     useEffect(() => {
-        if (parser != null && dancer != null) {
-            setTitle(`${parser.fight.encounter} - ${dancer.name}`)
+        if (parser != null && astrologian != null) {
+            setTitle(`${parser.fight.encounter} - ${astrologian.name}`)
         }
-    }, [dancer, parser, setTitle])
+    }, [astrologian, parser, setTitle])
 
     const generateTimestampLink = (start: number, end: number) => {
-        const baseReportURL = 'https://www.fflogs.com/reports/'
-        const fightURL = baseReportURL + `${parser.reportID}#fight=${parser.fightID}`
-
-        return fightURL + `&type=damage-done&start=${start}&end=${end}`
+        return generateFFLogsTimelineLink(
+            parser.reportID,
+            parser.fightID,
+            parser.fight.start,
+            parser.fight.end,
+            start,
+            end,
+        )
     }
 
     const formatDPS = (damage: number) => {
@@ -87,11 +93,16 @@ export function Result() {
     return <div>
         <div className={styles.fadeTop} />
         <div className={styles.result}>
-            <OverallDisplay damage={overall} formatDPS={formatDPS} />
+            <OverallDisplay
+                damage={overall}
+                windows={windows}
+                formatDPS={formatDPS}
+                formatTimestamp={parser.formatTimestamp}
+            />
             {windows.map(window =>
                 <StandardWindow
                     window={window}
-                    dancer={dancer}
+                    astrologian={astrologian}
                     formatTimestamp={parser.formatTimestamp}
                     generateTimestampLink={generateTimestampLink}
                     key={window.start}

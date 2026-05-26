@@ -1,110 +1,65 @@
-import Accordion from '@mui/material/Accordion'
-import AccordionDetails from '@mui/material/AccordionDetails'
-import AccordionSummary from '@mui/material/AccordionSummary'
+import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 import Card from '@mui/material/Card'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import IconButton from '@mui/material/IconButton'
+import Tooltip from '@mui/material/Tooltip'
 import { Friend } from 'api/fflogs/fight'
-import React, { useState } from 'react'
+import React from 'react'
 import { ComputedWindow } from 'types'
 import { DamageGraph } from './DamageGraph/DamageGraph'
-import { DamageTable } from './DamageTable/DamageTable'
-import { DanceLog } from './DanceLog/DanceLog'
 import styles from './StandardWindow.module.css'
-import {formatDamage} from '../../../util/format'
 import { NameChip, TimestampChip } from '../Chip'
+
+const getWindowAnchorID = (start: number) => `card-window-${start}`
 
 interface StandardWindowProps {
     window: ComputedWindow
-    dancer: Friend
+    astrologian: Friend
     formatTimestamp: (time: number) => string
     generateTimestampLink: (start: number, end: number) => string
 }
 
 export function StandardWindow(props: StandardWindowProps) {
-    const [expanded, setExpanded] = useState<string | false>(false)
-
     const start = props.formatTimestamp(props.window.start)
     const end = props.formatTimestamp(props.window.end)
 
-    const partner = props.window.actualPartner
+    const target = props.window.actualPartner
+    const timestampURL = props.generateTimestampLink(props.window.start, props.window.end)
 
-    const openTimestampLink = () => {
-        const timestampURL = props.generateTimestampLink(props.window.start, props.window.end)
-        window.open(timestampURL, '_blank', 'noopener,noreferrer')
-    }
-
-    const formatDPS = (damage: number) => {
-        const duration = props.window.end - props.window.start
-        const dps = damage / (duration / 1000)
-        return formatDamage(dps)
-    }
-
-    const handleChange = (panel: string) => (
-        _: React.ChangeEvent,
-        isExpanded: boolean,
-    ) => {
-        setExpanded(isExpanded ? panel : false)
-    }
-
-    return <div className={styles.standardWindow}>
+    return <div id={getWindowAnchorID(props.window.start)} className={styles.standardWindow}>
         <Card className={styles.card}>
             <div className={styles.rowContainer}>
                 <div className={styles.partnered}>
                     <NameChip
-                        name={props.dancer.name}
-                        job={props.dancer.job}
+                        name={props.astrologian.name}
+                        job={props.astrologian.job}
                         className={styles.dancer}
                     />
-                    <span className={styles.partneredText}>舞伴</span>
-                    <NameChip name={partner.name} job={partner.job} />
+                    <span className={styles.partneredText}>发卡</span>
+                    <NameChip name={target.name} job={target.job} />
                 </div>
                 <div className={styles.timestamp}>
                     <TimestampChip
                         timestamp={start + ' - ' + end}
-                        onClick={openTimestampLink}
                     />
+                    <Tooltip title="打开 FFLogs 时间轴">
+                        <IconButton
+                            component="a"
+                            href={timestampURL}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            size="medium"
+                        >
+                            <OpenInNewIcon />
+                        </IconButton>
+                    </Tooltip>
                 </div>
             </div>
         </Card>
         <Card className={styles.card + ' ' + styles.graph}>
-            <DamageGraph players={props.window.players} />
+            <DamageGraph
+                players={props.window.players}
+                actualPlayer={props.window.actualPartner}
+            />
         </Card>
-        <div>
-            <Accordion
-                expanded={expanded === 'panel1'} onChange={handleChange('panel1')}
-                TransitionProps={{ unmountOnExit: true }}
-                className={styles.accordion}
-            >
-                <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel1-content"
-                    id="panel1-header"
-                >
-                    伤害表
-                </AccordionSummary>
-                <AccordionDetails className={styles.accordionContent}>
-                    <DamageTable players={props.window.players} formatDPS={formatDPS} />
-                </AccordionDetails>
-            </Accordion>
-            <Accordion
-                expanded={expanded === 'panel2'} onChange={handleChange('panel2')}
-                TransitionProps={{ unmountOnExit: true }}
-                className={styles.accordion}
-            >
-                <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel2-content"
-                    id="panel2-header"
-                >
-                    舞者日志
-                </AccordionSummary>
-                <AccordionDetails className={styles.accordionContent}>
-                    <DanceLog
-                        events={props.window.events}
-                        formatTimestamp={props.formatTimestamp}
-                    />
-                </AccordionDetails>
-            </Accordion>
-        </div>
     </div>
 }

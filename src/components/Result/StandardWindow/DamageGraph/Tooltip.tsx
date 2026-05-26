@@ -13,14 +13,11 @@ export const GraphTooltip = ({
         const items = payload.filter(item => item.value != null && item.value > 0)
 
         const getLegendClass = (label: string) => {
-            if (label === '标准舞步') {
+            if (label === '太阳神之衡') {
                 return styles.standard
             }
-            if (label === '进攻之探戈') {
+            if (label === '战争神之枪') {
                 return styles.devilment
-            }
-            if (label === '伶俐') {
-                return styles.esprit
             }
         }
 

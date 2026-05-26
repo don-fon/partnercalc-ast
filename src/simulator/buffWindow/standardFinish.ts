@@ -14,6 +14,8 @@ export class StandardFinish extends Buff {
             standard: this.getStandardContribution(snapshot, windowInfo.stats),
             esprit: this.getEspritContribution(snapshot, windowInfo.player.job, windowInfo.potencyRatio),
             devilment: 0,
+            balance: 0,
+            spear: 0,
         }
     }
 

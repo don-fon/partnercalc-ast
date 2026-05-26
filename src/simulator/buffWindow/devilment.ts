@@ -12,6 +12,8 @@ export class Devilment extends Buff {
             standard: 0,
             esprit: 0,
             devilment: simulateDevilment(snapshot, windowInfo.stats),
+            balance: 0,
+            spear: 0,
         }
     }
 }

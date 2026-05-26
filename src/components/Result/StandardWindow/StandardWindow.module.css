@@ -42,6 +42,9 @@
 
 .timestamp {
     float: right;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
 }
 
 .rowContainer {
@@ -67,6 +70,121 @@
     border-radius: 3rem !important;
 }
 
+.summaryGrid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.summaryItem {
+    text-align: center;
+    padding: 1rem;
+    background: #28282c;
+    box-shadow: rgba(0, 0, 0, 0.5) 0px 5px 15px;
+}
+
+.summaryRows {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+}
+
+.summaryRow {
+    display: grid;
+    grid-template-columns: 1.2fr repeat(3, 1fr);
+    gap: 1rem;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background: #28282c;
+    box-shadow: rgba(0, 0, 0, 0.5) 0px 5px 15px;
+}
+
+.cardDecisionList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+}
+
+.cardDecisionGroup {
+    margin-bottom: 2rem;
+}
+
+.cardDecisionGroup > *:first-child {
+    margin-bottom: 0.75rem;
+}
+
+.cardDecision {
+    display: grid;
+    grid-template-columns: 0.8fr minmax(220px, 2fr) 1.2fr 1.2fr 0.9fr;
+    gap: 1rem;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 120ms ease, transform 120ms ease;
+}
+
+.cardDecision:hover,
+.cardDecision:focus {
+    background-color: #34343a;
+    transform: translateY(-1px);
+    outline: none;
+}
+
+.cardDecisionMeta,
+.cardDecisionTarget {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.cardDecisionChart {
+    min-width: 0;
+}
+
+.cardDecisionBarTrack {
+    position: relative;
+    height: 1.1rem;
+    overflow: hidden;
+    background: #1f1f23;
+}
+
+.cardDecisionOptimalBar,
+.cardDecisionActualBar,
+.cardDecisionActualBarOptimal {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+}
+
+.cardDecisionOptimalBar {
+    background: #5c6670;
+}
+
+.cardDecisionActualBar {
+    background: #ffb74d;
+}
+
+.cardDecisionActualBarOptimal {
+    background: #80cbc4;
+}
+
+.cardDecisionGood,
+.cardDecisionBad {
+    text-align: right;
+    font-weight: bold;
+}
+
+.cardDecisionGood * {
+    color: #80cbc4 !important;
+}
+
+.cardDecisionBad * {
+    color: #ffab91 !important;
+}
+
 @media screen and (max-width: 900px) {
     .partneredText, .dancer {
         display: none !important;
@@ -88,5 +206,16 @@
     .overallChip > svg {
         height: 30px;
         width: 30px;
+    }
+
+    .summaryGrid,
+    .summaryRow,
+    .cardDecision {
+        grid-template-columns: 1fr;
+    }
+
+    .cardDecisionGood,
+    .cardDecisionBad {
+        text-align: left;
     }
 }

@@ -58,6 +58,8 @@ export class BuffWindow {
                 standard: 0,
                 esprit: 0,
                 devilment: 0,
+                balance: 0,
+                spear: 0,
             }
 
             this.buffs.forEach(buff => {

@@ -4,7 +4,7 @@
 
 ![Build](https://github.com/hintxiv/ts-partnercalc/actions/workflows/deploy.yml/badge.svg)
 
-A tool for analyzing Dance Partner damage contribution in FFXIV.
+A tool for analyzing Astrologian card damage contribution in FFXIV.
 
 ## Getting Started
 

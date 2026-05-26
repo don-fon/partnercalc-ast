@@ -5,6 +5,18 @@ declare namespace StandardWindowModuleCssNamespace {
     accordion: string;
     accordionContent: string;
     card: string;
+    cardDecision: string;
+    cardDecisionActualBar: string;
+    cardDecisionActualBarOptimal: string;
+    cardDecisionBad: string;
+    cardDecisionBarTrack: string;
+    cardDecisionChart: string;
+    cardDecisionGood: string;
+    cardDecisionGroup: string;
+    cardDecisionList: string;
+    cardDecisionMeta: string;
+    cardDecisionOptimalBar: string;
+    cardDecisionTarget: string;
     dancer: string;
     graph: string;
     overallChip: string;
@@ -14,6 +26,10 @@ declare namespace StandardWindowModuleCssNamespace {
     partneredText: string;
     rowContainer: string;
     standardWindow: string;
+    summaryGrid: string;
+    summaryItem: string;
+    summaryRow: string;
+    summaryRows: string;
     timestamp: string;
   }
 }

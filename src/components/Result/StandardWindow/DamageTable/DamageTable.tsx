@@ -9,6 +9,8 @@ import { ComputedPlayer } from 'types'
 
 interface DamageTableProps {
     players: ComputedPlayer[]
+    actualPlayer: ComputedPlayer
+    bestPlayer: ComputedPlayer
     formatDPS: (damage: number) => string
 }
 
@@ -17,25 +19,27 @@ export function DamageTable(props: DamageTableProps) {
         return <TableRow key={player.id}>
             <TableCell>{player.name}</TableCell>
             <TableCell>{player.job.name}</TableCell>
-            <TableCell>{Math.floor(player.totals.standard)}</TableCell>
-            <TableCell>{Math.floor(player.totals.devilment)}</TableCell>
-            <TableCell>{Math.floor(player.totals.esprit)}</TableCell>
             <TableCell>{Math.floor(player.totals.total)}</TableCell>
             <TableCell>{props.formatDPS(player.totals.total)}</TableCell>
+            <TableCell>{props.formatDPS(props.bestPlayer.totals.total - player.totals.total)}</TableCell>
+            <TableCell>
+                {player.id === props.actualPlayer.id && '实际'}
+                {player.id === props.actualPlayer.id && player.id === props.bestPlayer.id && ' / '}
+                {player.id === props.bestPlayer.id && '最优'}
+            </TableCell>
         </TableRow>
     }
 
     return <TableContainer>
-        <Table aria-label="伤害表">
+        <Table aria-label="候选目标表">
             <TableHead>
                 <TableRow>
                     <TableCell>名称</TableCell>
                     <TableCell>职业</TableCell>
-                    <TableCell>标准舞步</TableCell>
-                    <TableCell>进攻之探戈</TableCell>
-                    <TableCell>伶俐</TableCell>
-                    <TableCell>总计</TableCell>
-                    <TableCell>DPS</TableCell>
+                    <TableCell>收益</TableCell>
+                    <TableCell>窗口 DPS</TableCell>
+                    <TableCell>距最优</TableCell>
+                    <TableCell>标记</TableCell>
                 </TableRow>
             </TableHead>
             <TableBody>

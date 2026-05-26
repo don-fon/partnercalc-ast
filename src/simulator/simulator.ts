@@ -10,12 +10,12 @@ import {
     DamageTotals,
     OverallDamage,
 } from 'types'
-import { BuffWindow } from './buffWindow'
+import { CardWindow } from './cardWindow'
 import { Snapshot } from '../types/snapshot'
 import { EnemyHandler } from './handlers/enemies'
 import { PlayerHandler } from './handlers/players'
 import { SnapshotHook } from './hooks'
-import { Dancer } from './modules/entities/dancer'
+import { Astrologian } from './modules/entities/astrologian'
 
 export interface StatOverrides {
     [friendID: number]: {
@@ -27,29 +27,27 @@ export interface StatOverrides {
 export class Simulator {
     private parser: FFLogsParser
     private data: DataProvider
-    private dancer: Dancer
+    private astrologian: Astrologian
     private enemies: EnemyHandler
     private players: PlayerHandler
     private statOverrides?: StatOverrides
-    private buffWindows: BuffWindow[] = []
+    private cardWindows: CardWindow[] = []
     private results: ComputedWindow[] = []
 
-    constructor(parser: FFLogsParser, dancer: Friend, statOverrides?: StatOverrides) {
+    constructor(parser: FFLogsParser, astrologian: Friend, statOverrides?: StatOverrides) {
         this.parser = parser
         this.data = new DataProvider()
-        this.dancer = new Dancer(dancer.id, parser.fight.start, this.registerNewBuffWindow, this.data)
+        this.astrologian = new Astrologian(astrologian.id, this.registerNewCardWindow, this.data)
         this.enemies = new EnemyHandler(parser.fight.friends, this.data)
         this.statOverrides = statOverrides
 
-        // The Dancer can't partner themselves
-        const potentialPartners = parser.fight.friends.filter(player => player.id !== dancer.id)
-        this.players = new PlayerHandler(potentialPartners, this.registerNewSnapshot, this.data)
+        const potentialTargets = parser.fight.friends.filter(player => player.id !== astrologian.id)
+        this.players = new PlayerHandler(potentialTargets, this.registerNewSnapshot, this.data)
     }
 
-    public async calculatePartnerDamage(/* TODO: player stats */): Promise<ComputedWindow[]> {
+    public async calculateCardDamage(): Promise<ComputedWindow[]> {
         if (this.results.length === 0) {
-            // Build + cache standard windows from the report
-            await this.buildStandardWindows()
+            await this.buildCardWindows()
         }
 
         return this.results
@@ -57,8 +55,28 @@ export class Simulator {
 
     public calculateOverallDamage(): OverallDamage {
         const playerMap: Map<number, ComputedPlayer> = new Map()
+        const summary = {
+            actual: 0,
+            optimal: 0,
+            balance: {
+                actual: 0,
+                optimal: 0,
+            },
+            spear: {
+                actual: 0,
+                optimal: 0,
+            },
+        }
 
         for (const window of this.results) {
+            const actual = window.actualPartner?.totals.total ?? 0
+            const optimal = window.bestPartner?.totals.total ?? 0
+
+            summary.actual += actual
+            summary.optimal += optimal
+            summary[window.cardType].actual += actual
+            summary[window.cardType].optimal += optimal
+
             for (const player of window.players) {
                 if (playerMap.has(player.id)) {
                     const totals = playerMap.get(player.id).totals
@@ -66,6 +84,8 @@ export class Simulator {
                     totals.standard += player.totals.standard
                     totals.esprit += player.totals.esprit
                     totals.devilment += player.totals.devilment
+                    totals.balance += player.totals.balance
+                    totals.spear += player.totals.spear
                     totals.total += player.totals.total
 
                 } else {
@@ -83,11 +103,11 @@ export class Simulator {
 
         return {
             players: players,
-            bestPartner: players[0],
+            ...summary,
         }
     }
 
-    private async buildStandardWindows(): Promise<void> {
+    private async buildCardWindows(): Promise<void> {
         const debuffIDs = Object.values(this.data.debuffs)
             .map(effect => effect.id)
 
@@ -97,17 +117,17 @@ export class Simulator {
             this.processEvent(event)
         }
 
-        this.results = this.buffWindows
+        this.results = this.cardWindows
             .map(this.calculateBuffWindow, this)
             .filter(window => window != null)
     }
 
-    private calculateBuffWindow(window: BuffWindow, /* TODO: player stats */): ComputedWindow | undefined {
+    private calculateBuffWindow(window: CardWindow): ComputedWindow | undefined {
         const computedPlayers: ComputedPlayer[] = []
         const players = this.players.getPlayers()
-        const actualPartner = players.find(player => player.id === window.target)
+        const actualTarget = players.find(player => player.id === window.target)
 
-        if (actualPartner == null) {
+        if (actualTarget == null) {
             // Something weird happened, skip this window
             return
         }
@@ -130,10 +150,9 @@ export class Simulator {
             const computedDamage = window.getPlayerContribution({
                 stats: playerStats,
                 player: player,
-                potencyRatio: this.dancer.potencyRatio,
             })
 
-            if (computedDamage.length === 0 && player !== actualPartner) {
+            if (computedDamage.length === 0 && player !== actualTarget) {
                 continue
             }
 
@@ -141,6 +160,8 @@ export class Simulator {
                 standard: 0,
                 esprit: 0,
                 devilment: 0,
+                balance: 0,
+                spear: 0,
                 total: 0,
             }
 
@@ -148,7 +169,9 @@ export class Simulator {
                 damageTotals.standard += damage.standard
                 damageTotals.devilment += damage.devilment
                 damageTotals.esprit += damage.esprit
-                damageTotals.total += damage.standard + damage.devilment + damage.esprit
+                damageTotals.balance += damage.balance
+                damageTotals.spear += damage.spear
+                damageTotals.total += damage.balance + damage.spear
             }
 
             computedPlayers.push({
@@ -177,6 +200,7 @@ export class Simulator {
         return {
             start: window.start,
             end: window.end ?? this.parser.fight.end,
+            cardType: window.cardType,
             players: computedPlayers,
             actualPartner: computedPlayers.find(player => player.id === window.target),
             bestPartner: computedPlayers[0],
@@ -185,38 +209,30 @@ export class Simulator {
     }
 
     private processEvent(event: FFLogsEvent) {
-        this.dancer.processEvent(event)
+        this.astrologian.processEvent(event)
         this.players.processEvent(event)
         this.enemies.processEvent(event)
     }
 
-    private getWindow(time: number): BuffWindow | undefined {
-        const lastWindow = this.buffWindows.at(-1)
-
-        if (!lastWindow) { return undefined }
-
-        const start = lastWindow.start
-        const end = lastWindow.end
-
-        if (lastWindow && time > start && (!end || time > end)) {
-            return lastWindow
-        }
-
-        return undefined
-    }
-
-    private registerNewBuffWindow = (window: BuffWindow) => {
-        this.buffWindows.push(window)
+    private registerNewCardWindow = (window: CardWindow) => {
+        this.cardWindows.push(window)
     }
 
     private registerNewSnapshot: SnapshotHook = (snapshot: Snapshot) => {
-        const window = this.getWindow(snapshot.timestamp)
-
-        if (!window) { return }
-
         const debuffs = this.enemies.getEnemyDebuffs(snapshot.target)
         snapshot.addDebuffs(debuffs)
 
-        window.processSnapshot(snapshot)
+        const windows = this.getWindowsForTimestamp(snapshot.timestamp)
+        for (const window of windows) {
+            window.processSnapshot(snapshot)
+        }
+    }
+
+    private getWindowsForTimestamp(time: number): CardWindow[] {
+        return this.cardWindows.filter(window => {
+            if (time <= window.start) { return false }
+            if (window.end != null && time > window.end) { return false }
+            return true
+        })
     }
 }

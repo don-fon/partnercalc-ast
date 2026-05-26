@@ -4,8 +4,10 @@ export {
     ComputedDamage,
     ComputedPlayer,
     ComputedWindow,
+    CardType,
     DamageTotals,
     OverallDamage,
+    OverallCardSummary,
 } from './damage'
 export { Effect } from './effect'
 export { Job } from './job'

@@ -1,10 +1,14 @@
 import { Action } from './action'
 import { Job } from './job'
 
+export type CardType = 'balance' | 'spear'
+
 interface DamageTypes {
     standard: number
     esprit: number
     devilment: number
+    balance: number
+    spear: number
 }
 
 export interface ComputedDamage extends DamageTypes {
@@ -32,13 +36,22 @@ export interface ComputedEvent {
 export interface ComputedWindow {
     start: number
     end: number
+    cardType: CardType
     players: ComputedPlayer[]
     actualPartner: ComputedPlayer
     bestPartner: ComputedPlayer
     events: ComputedEvent[]
 }
 
+export interface OverallCardSummary {
+    actual: number
+    optimal: number
+}
+
 export interface OverallDamage {
     players: ComputedPlayer[]
-    bestPartner: ComputedPlayer
+    actual: number
+    optimal: number
+    balance: OverallCardSummary
+    spear: OverallCardSummary
 }

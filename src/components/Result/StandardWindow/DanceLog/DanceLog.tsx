@@ -14,7 +14,7 @@ export function DanceLog(props: DanceLogProps) {
             <div key={event.timestamp} className={styles.eventRow}>
                 <TimestampChip timestamp={props.formatTimestamp(event.timestamp)} />
                 <span className={styles.eventText}>
-                    {event.action.name + (event.target != null ? ' on' : '')}
+                    {event.action.name}
                 </span>
                 {event.target != null &&
                     <NameChip name={event.target.name} job={event.target.job} />

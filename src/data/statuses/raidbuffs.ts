@@ -17,6 +17,12 @@ export const BUFFS = preserve<Status>()({
     TECHNICAL_FINISH: {
         id: 1822,
     },
+    THE_BALANCE: {
+        id: 3887,
+    },
+    THE_SPEAR: {
+        id: 3889,
+    },
 })
 
 export const DEBUFFS = preserve<Status>()({

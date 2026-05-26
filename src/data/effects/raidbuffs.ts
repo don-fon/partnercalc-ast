@@ -24,6 +24,14 @@ export const RAID_BUFFS = preserve<Effect>()({
         id: STATUSES.TECHNICAL_FINISH.id,
         potency: 1.05,
     },
+    THE_BALANCE: {
+        id: STATUSES.THE_BALANCE.id,
+        potency: 1.06,
+    },
+    THE_SPEAR: {
+        id: STATUSES.THE_SPEAR.id,
+        potency: 1.06,
+    },
 })
 
 export const RAID_DEBUFFS = preserve<Effect>()({

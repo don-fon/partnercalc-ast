@@ -114,6 +114,29 @@ export function simulateStandard(
     return simulatedDamage
 }
 
+export function simulatePotencyBuff(
+    snapshot: Snapshot,
+    stats: Stats,
+    effect: Effect,
+): number {
+    const multiplier = effect.potency ?? 1
+    const partneredStats = applyEffects(stats, snapshot.effects)
+    const hasBuff = snapshot.effects.some(e => e.id === effect.id)
+    let simulatedDamage = 0
+
+    for (const damage of snapshot.damage) {
+        let expectedDamage = normalizeDamage(snapshot, damage, stats, partneredStats)
+
+        if (hasBuff) {
+            expectedDamage /= multiplier
+        }
+
+        simulatedDamage += expectedDamage * (multiplier - 1)
+    }
+
+    return simulatedDamage
+}
+
 function devilmentRdps(
     base: number,
     snapshot: Snapshot,

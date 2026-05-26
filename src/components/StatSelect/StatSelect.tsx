@@ -96,14 +96,15 @@ export const StatSelect = () => {
         return null
     }
 
-    const dancer = fight.friends
-        .find(friend => friend.job === JOBS.Dancer)
+    const astrologian = fight.friends
+        .find(friend => friend.job === JOBS.Astrologian)
 
-    if (dancer == null) {
-        asyncThrow(new Error('Report does not have a Dancer.'))
+    if (astrologian == null) {
+        asyncThrow(new Error('该报告中没有占星。'))
+        return null
     }
 
-    const friends = fight.friends.filter(friend => friend !== dancer)
+    const friends = fight.friends.filter(friend => friend !== astrologian)
 
     return (
         <StatSelectContainer>

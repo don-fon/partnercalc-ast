@@ -2,6 +2,7 @@ import React from 'react'
 import {
     Bar,
     BarChart,
+    Cell,
     CartesianGrid,
     Legend,
     ResponsiveContainer,
@@ -16,14 +17,14 @@ import { GraphTooltip } from './Tooltip'
 
 interface DamageGraphProps {
     players: ComputedPlayer[]
+    actualPlayer: ComputedPlayer
 }
 
 export function DamageGraph(props: DamageGraphProps) {
     const data = props.players.map(player => ({
         name: player.name,
-        '标准舞步': Math.floor(player.totals.standard),
-        '进攻之探戈': Math.floor(player.totals.devilment),
-        '伶俐': Math.floor(player.totals.esprit),
+        '太阳神之衡': Math.floor(player.totals.balance),
+        '战争神之枪': Math.floor(player.totals.spear),
     }))
 
     return <div className={styles.standardGraph}>
@@ -61,9 +62,22 @@ export function DamageGraph(props: DamageGraphProps) {
                 />
                 <Legend />
                 <CartesianGrid horizontal={false} vertical={true} opacity={0.5} />
-                <Bar dataKey="标准舞步" barSize={30} stackId="a" fill="#e0e158" />
-                <Bar dataKey="进攻之探戈" barSize={30} stackId="a" fill="#0fe863" />
-                <Bar dataKey="伶俐" barSize={30} stackId="a" fill="#3febde" />
+                <Bar dataKey="太阳神之衡" barSize={30} stackId="a" fill="#e0e158">
+                    {props.players.map(player =>
+                        <Cell
+                            key={player.id}
+                            fill={player.id === props.actualPlayer.id ? '#ffb74d' : '#e0e158'}
+                        />
+                    )}
+                </Bar>
+                <Bar dataKey="战争神之枪" barSize={30} stackId="a" fill="#0fe863">
+                    {props.players.map(player =>
+                        <Cell
+                            key={player.id}
+                            fill={player.id === props.actualPlayer.id ? '#ffb74d' : '#0fe863'}
+                        />
+                    )}
+                </Bar>
 
             </BarChart>
         </ResponsiveContainer>
@@ -89,10 +103,7 @@ const playerNameTick = (players: ComputedPlayer[]) => (props: AxisTickProps) => 
 
     if (player == null) { return }
 
-    const initials = player.name
-        .split(' ')
-        .map(name => name.charAt(0).toUpperCase() + '.')
-        .join(' ')
+    const label = formatPlayerAxisLabel(player.name)
 
     return <g transform={`translate(${x},${y})`} fill="white">
         <text
@@ -100,7 +111,7 @@ const playerNameTick = (players: ComputedPlayer[]) => (props: AxisTickProps) => 
             y={8}
             textAnchor="end"
         >
-            {initials}
+            {label}
         </text>
         <player.job.Icon
             height={30}
@@ -109,4 +120,16 @@ const playerNameTick = (players: ComputedPlayer[]) => (props: AxisTickProps) => 
             y={-13}
         />
     </g>
+}
+
+const formatPlayerAxisLabel = (name: string) => {
+    const anonymousName = name.match(/^Player \((\d+)\)$/)
+    if (anonymousName != null) {
+        return `#${anonymousName[1]}`
+    }
+
+    return name
+        .split(' ')
+        .map(name => name.charAt(0).toUpperCase() + '.')
+        .join(' ')
 }
