@@ -13,25 +13,23 @@ declare namespace StandardWindowModuleCssNamespace {
     cardDecisionChart: string;
     cardDecisionGood: string;
     cardDecisionGroup: string;
+    cardDecisionHeader: string;
     cardDecisionList: string;
     cardDecisionMeta: string;
     cardDecisionOptimalBar: string;
     cardDecisionTarget: string;
     cardDecisionTitle: string;
-    cardLabel: string;
-    cardLabelIcon: string;
     cardTitleIcon: string;
     dpsAccordion: string;
     graph: string;
     graphToolbar: string;
     overallChip: string;
-    overallText: string;
     overallWindow: string;
     standardWindow: string;
-    summaryGrid: string;
-    summaryItem: string;
+    summaryMetric: string;
+    summaryMetricLabel: string;
+    summaryMetricValue: string;
     summaryRow: string;
-    summaryRows: string;
   }
 }
 

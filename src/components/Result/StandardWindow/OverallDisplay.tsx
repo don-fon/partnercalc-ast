@@ -16,25 +16,28 @@ interface OverallDisplayProps {
 const getWindowAnchorID = (start: number) => `card-window-${start}`
 
 export function OverallDisplay(props: OverallDisplayProps) {
-    const improvement = props.damage.optimal - props.damage.actual
-    const balanceImprovement = props.damage.balance.optimal - props.damage.balance.actual
-    const spearImprovement = props.damage.spear.optimal - props.damage.spear.actual
     const maxOptimal = Math.max(...props.windows.map(window => window.bestPartner.totals.total))
 
-    const renderCardSummary = (
-        cardType: ComputedWindow['cardType'],
-        actual: number,
-        optimal: number,
-        delta: number,
-    ) => <div className={styles.summaryRow}>
-        <div className={styles.cardLabel}>
-            <CardIcon cardType={cardType} className={styles.cardLabelIcon} />
-            <Typography>{CARD_LABELS[cardType]}</Typography>
+    const renderCardSummary = (actual: number, optimal: number, delta: number) => {
+        const items = [
+            ['实际', actual],
+            ['逐卡最优', optimal],
+            ['差值', delta],
+        ]
+
+        return <div className={styles.summaryRow}>
+            {items.map(([label, value]) => (
+                <div className={styles.summaryMetric} key={label}>
+                    <Typography className={styles.summaryMetricLabel}>
+                        {label}
+                    </Typography>
+                    <Typography className={styles.summaryMetricValue}>
+                        {props.formatDPS(value as number)}
+                    </Typography>
+                </div>
+            ))}
         </div>
-        <Typography>实际 {props.formatDPS(actual)}</Typography>
-        <Typography>逐卡最优 {props.formatDPS(optimal)}</Typography>
-        <Typography>差值 {props.formatDPS(delta)}</Typography>
-    </div>
+    }
 
     const scrollToWindow = (start: number) => {
         document.getElementById(getWindowAnchorID(start))
@@ -46,11 +49,20 @@ export function OverallDisplay(props: OverallDisplayProps) {
 
     const renderDecisionGroup = (cardType: ComputedWindow['cardType']) => {
         const windows = props.windows.filter(window => window.cardType === cardType)
+        const damage = props.damage[cardType]
+        const improvement = damage.optimal - damage.actual
 
         return <div className={styles.cardDecisionGroup}>
-            <div className={styles.cardDecisionTitle}>
-                <CardIcon cardType={cardType} className={styles.cardTitleIcon} />
-                <Typography variant="h5">{CARD_LABELS[cardType]}</Typography>
+            <div className={styles.cardDecisionHeader}>
+                <div className={styles.cardDecisionTitle}>
+                    <CardIcon cardType={cardType} className={styles.cardTitleIcon} />
+                    <Typography variant="h5">{CARD_LABELS[cardType]}</Typography>
+                </div>
+                {renderCardSummary(
+                    damage.actual,
+                    damage.optimal,
+                    improvement,
+                )}
             </div>
             <div className={styles.cardDecisionList}>
                 {windows.map(window => {
@@ -111,39 +123,6 @@ export function OverallDisplay(props: OverallDisplayProps) {
     }
 
     return <div className={styles.overallWindow}>
-        <div className={styles.overallText}>
-            <Typography variant="h3" textAlign="center">
-                收益汇总
-            </Typography>
-        </div>
-        <div className={styles.summaryGrid}>
-            <div className={styles.summaryItem}>
-                <Typography variant="h6">实际发卡</Typography>
-                <Typography variant="h4">{props.formatDPS(props.damage.actual)}</Typography>
-            </div>
-            <div className={styles.summaryItem}>
-                <Typography variant="h6">逐卡最优</Typography>
-                <Typography variant="h4">{props.formatDPS(props.damage.optimal)}</Typography>
-            </div>
-            <div className={styles.summaryItem}>
-                <Typography variant="h6">可提升</Typography>
-                <Typography variant="h4">{props.formatDPS(improvement)}</Typography>
-            </div>
-        </div>
-        <div className={styles.summaryRows}>
-            {renderCardSummary(
-                'balance',
-                props.damage.balance.actual,
-                props.damage.balance.optimal,
-                balanceImprovement,
-            )}
-            {renderCardSummary(
-                'spear',
-                props.damage.spear.actual,
-                props.damage.spear.optimal,
-                spearImprovement,
-            )}
-        </div>
         {renderDecisionGroup('balance')}
         {renderDecisionGroup('spear')}
     </div>
