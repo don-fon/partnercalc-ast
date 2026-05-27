@@ -3,7 +3,6 @@
 declare namespace StandardWindowModuleCssNamespace {
   export interface IStandardWindowModuleCss {
     accordion: string;
-    accordionContent: string;
     card: string;
     cardDecision: string;
     cardDecisionActualBar: string;

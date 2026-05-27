@@ -13,8 +13,7 @@ import { DamageGraph } from './DamageGraph/DamageGraph'
 import styles from './StandardWindow.module.css'
 import { TargetDpsChart } from './TargetDpsChart'
 import { TimestampChip } from '../Chip'
-
-const getWindowAnchorID = (start: number) => `card-window-${start}`
+import { getWindowAnchorID } from '../scrollToWindow'
 
 interface StandardWindowProps {
     window: ComputedWindow

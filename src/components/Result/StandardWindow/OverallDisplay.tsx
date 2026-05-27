@@ -5,6 +5,7 @@ import { ComputedWindow, OverallDamage } from 'types'
 import { CARD_LABELS, CardIcon } from '../CardIcon'
 import styles from './StandardWindow.module.css'
 import { NameChip, TimestampChip } from '../Chip'
+import { scrollToCardWindow } from '../scrollToWindow'
 
 interface OverallDisplayProps {
     damage: OverallDamage
@@ -12,8 +13,6 @@ interface OverallDisplayProps {
     formatDPS: (damage: number) => string
     formatTimestamp: (time: number) => string
 }
-
-const getWindowAnchorID = (start: number) => `card-window-${start}`
 
 export function OverallDisplay(props: OverallDisplayProps) {
     const maxOptimal = Math.max(...props.windows.map(window => window.bestPartner.totals.total))
@@ -37,14 +36,6 @@ export function OverallDisplay(props: OverallDisplayProps) {
                 </div>
             ))}
         </div>
-    }
-
-    const scrollToWindow = (start: number) => {
-        document.getElementById(getWindowAnchorID(start))
-            ?.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start',
-            })
     }
 
     const renderDecisionGroup = (cardType: ComputedWindow['cardType']) => {
@@ -78,11 +69,11 @@ export function OverallDisplay(props: OverallDisplayProps) {
                         key={window.start}
                         role="button"
                         tabIndex={0}
-                        onClick={() => scrollToWindow(window.start)}
+                        onClick={() => scrollToCardWindow(window.start)}
                         onKeyDown={event => {
                             if (event.key === 'Enter' || event.key === ' ') {
                                 event.preventDefault()
-                                scrollToWindow(window.start)
+                                scrollToCardWindow(window.start)
                             }
                         }}
                     >

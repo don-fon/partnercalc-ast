@@ -12,7 +12,6 @@
 
 .graph {
     position: relative;
-    scroll-snap-align: center;
 }
 
 .accordion {
@@ -23,10 +22,6 @@
 .accordion::before {
     background-color: rgb(30, 30, 31) !important;
     height: 2px !important;
-}
-
-.accordionContent {
-    scroll-snap-align: center;
 }
 
 .graphToolbar {
