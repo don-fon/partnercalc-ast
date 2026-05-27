@@ -2,6 +2,7 @@ export { Action } from './action'
 export {
     ComputedEvent,
     ComputedDamage,
+    ComputedDPSPoint,
     ComputedPlayer,
     ComputedWindow,
     CardType,
