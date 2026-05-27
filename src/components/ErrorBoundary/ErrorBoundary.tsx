@@ -1,5 +1,4 @@
 import Grid from '@mui/material/Grid'
-import Link from '@mui/material/Link'
 import Typography from '@mui/material/Typography'
 import React, { ReactNode, useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
@@ -45,23 +44,12 @@ class ErrorBoundaryClass extends React.Component<Props, State> {
             <Grid container spacing={3}>
                 <Grid size={12}>
                     <Typography variant="h3" textAlign="center" color="text.primary">
-                        Oops, something went wrong!
+                        出现错误
                     </Typography>
                 </Grid>
                 <Grid size={12}>
                     <Typography variant="h4" textAlign="center" color="text.primary">
-                        {this.state.error.message}
-                    </Typography>
-                </Grid>
-                <Grid size={12}>
-                    <Typography variant="h6" textAlign="center" color="text.primary">
-                        Not sure why you're seeing this? DM me on <Link
-                            href="https://discord.com/users/492781599126061066"
-                            color="secondary"
-                            target="_blank"
-                        >
-                            Discord
-                        </Link>.
+                        {this.state.error?.message}
                     </Typography>
                 </Grid>
             </Grid>

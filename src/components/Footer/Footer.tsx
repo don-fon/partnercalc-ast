@@ -9,8 +9,7 @@ export function Footer() {
             <Grid size={12}>
                 <Typography textAlign="center" color="text.secondary">
                     占星改造：<a className={styles.link} href="https://github.com/don-fon" target="_blank" rel="noopener noreferrer">don-fon</a>
-                    {' '}· 原项目：<a className={styles.link} href="https://partnercalc.app/" target="_blank" rel="noopener noreferrer">partnercalc.app</a>
-                    {' '}(<a className={styles.link} href="https://github.com/hintxiv/ts-partnercalc" target="_blank" rel="noopener noreferrer">hintxiv/ts-partnercalc</a>).
+                    {' '}· 基于 <a className={styles.link} href="https://github.com/hintxiv/ts-partnercalc" target="_blank" rel="noopener noreferrer">hintxiv/ts-partnercalc</a> 改造。
                 </Typography>
             </Grid>
         </Grid>
