@@ -66,6 +66,11 @@ module.exports = {
       template: path.resolve(__dirname, 'src', 'components', 'index.html'),
       favicon: 'public/favicon.png',
     }),
+    new HtmlWebpackPlugin({
+      filename: '404.html',
+      template: path.resolve(__dirname, 'src', 'components', 'index.html'),
+      favicon: 'public/favicon.png',
+    }),
 
     // 只注入用到的变量：本地来自 .env，CI 来自 Actions env
     new webpack.DefinePlugin({
