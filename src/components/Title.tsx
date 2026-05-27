@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useReducer } from 'react'
 import { HelmetProvider } from 'react-helmet-async'
 
-const DEFAULT_TITLE = '发卡计算'
+const DEFAULT_TITLE = '奥秘卡收益'
 
 interface TitleContextValue {
     title: string

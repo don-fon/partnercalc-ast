@@ -106,7 +106,7 @@ export function App() {
                         <div className={styles.logo} onClick={goHome}>
                             <img src={withPublicPath('favicon.png')} />
                             <Typography variant="h5" textAlign="center">
-                                发卡计算
+                                奥秘卡收益
                             </Typography>
                         </div>
                     </Toolbar>

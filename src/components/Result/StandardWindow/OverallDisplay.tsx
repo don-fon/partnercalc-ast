@@ -113,7 +113,7 @@ export function OverallDisplay(props: OverallDisplayProps) {
     return <div className={styles.overallWindow}>
         <div className={styles.overallText}>
             <Typography variant="h3" textAlign="center">
-                发卡收益汇总
+                收益汇总
             </Typography>
         </div>
         <div className={styles.summaryGrid}>
