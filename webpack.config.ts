@@ -9,6 +9,7 @@ dotenv.config()
 
 const repo = process.env.REPO_NAME
 const isProd = process.env.NODE_ENV === 'production'
+const publicPath = repo ? `/${repo}/` : '/'
 
 module.exports = {
   entry: './src/components/index.tsx',
@@ -43,7 +44,7 @@ module.exports = {
     filename: '[name].[fullhash:8].js',
     sourceMapFilename: '[name].[fullhash:8].map',
     chunkFilename: '[id].[fullhash:8].js',
-    publicPath: isProd ? `/${repo}/` : '/',
+    publicPath,
     clean: true,
   },
 
@@ -71,6 +72,7 @@ module.exports = {
       'process.env.FFLOGS_API_KEY': JSON.stringify(process.env.FFLOGS_API_KEY || ''),
       'process.env.FFLOGS_API_URL': JSON.stringify(process.env.FFLOGS_API_URL || ''),
       'process.env.ETRO_API_URL': JSON.stringify(process.env.ETRO_API_URL || ''),
+      'process.env.REPO_NAME': JSON.stringify(repo || ''),
     }),
 
     new CopyWebpackPlugin({ patterns: [{ from: 'public' }] }),

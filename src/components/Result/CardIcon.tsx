@@ -1,5 +1,6 @@
 import React from 'react'
 import { CardType } from 'types'
+import { withPublicPath } from 'util/publicPath'
 
 interface CardIconProps {
     cardType: CardType
@@ -12,8 +13,8 @@ export const CARD_LABELS = {
 }
 
 const CARD_ICON_URLS = {
-    balance: '/card-balance.png',
-    spear: '/card-spear.png',
+    balance: withPublicPath('card-balance.png'),
+    spear: withPublicPath('card-spear.png'),
 }
 
 export function CardIcon(props: CardIconProps) {

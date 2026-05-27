@@ -4,6 +4,7 @@ import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import React from 'react'
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom'
+import { withPublicPath } from 'util/publicPath'
 import styles from './App.module.css'
 import { ErrorBoundary } from './ErrorBoundary/ErrorBoundary'
 import { Footer } from './Footer/Footer'
@@ -103,7 +104,7 @@ export function App() {
                 <AppBar className={styles.appbar}>
                     <Toolbar>
                         <div className={styles.logo} onClick={goHome}>
-                            <img src="/favicon.png" />
+                            <img src={withPublicPath('favicon.png')} />
                             <Typography variant="h5" textAlign="center">
                                 发卡计算
                             </Typography>

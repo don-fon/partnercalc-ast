@@ -7,13 +7,14 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { Simulator } from 'simulator/simulator'
 import { ComputedWindow, OverallDamage } from 'types'
 import { formatDamage } from 'util/format'
+import { withPublicPath } from 'util/publicPath'
 import { generateFFLogsTimelineLink } from './fflogsLinks'
 import styles from './Result.module.css'
 import { OverallDisplay } from './StandardWindow/OverallDisplay'
 import { StandardWindow } from './StandardWindow/StandardWindow'
 import { TimelineSidebar } from './TimelineSidebar'
 
-const FIXTURE_URL = '/fixtures/fflogs-test-fixture.json'
+const FIXTURE_URL = withPublicPath('fixtures/fflogs-test-fixture.json')
 
 export function TestResult() {
     const { setTitle } = useTitle()
