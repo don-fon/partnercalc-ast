@@ -1,42 +1,85 @@
-<p align="center"><a href="https://partnercalc.app"><img src="https://raw.githubusercontent.com/hintxiv/ts-partnercalc/main/public/logo.png" height="150" width="130" alt="logo"></a></p>
+# 星极抽卡
 
-<h1 align="center">partnercalc</h1>
+FFXIV 占星术士发卡收益分析工具。项目基于原舞者搭档收益计算工具改造，当前目标是分析占星在 FFLogs 战斗记录中的 `太阳神之衡` / `战争神之枪` 发卡收益。
 
-![Build](https://github.com/hintxiv/ts-partnercalc/actions/workflows/deploy.yml/badge.svg)
+线上地址：
 
-A tool for analyzing Astrologian card damage contribution in FFXIV.
+https://don-fon.github.io/partnercalc-ast/
 
-## Getting Started
+## 功能
 
-**Requirements**
+- 从 FFLogs 报告链接读取战斗事件。
+- 识别占星发出的两种输出卡：
+  - `太阳神之衡`
+  - `战争神之枪`
+- 按每一次发卡分别计算：
+  - 实际发卡目标收益
+  - 当次最优目标收益
+  - 实际与最优之间的损失
+- 汇总展示两种卡的整体收益。
+- 提供右侧时间轴，方便跳转到每次发卡窗口。
+- 每次发卡窗口提供 FFLogs 时间轴外链。
+- `/test` 页面使用本地匿名 fixture，便于调试 UI 和计算逻辑。
 
-* [git](https://git-scm.com/)
-* [node.js](https://nodejs.org/en/)
+## 本地开发
 
-1. Clone the repo:
+要求：
 
-```bash
-> git clone https://github.com/hintxiv/ts-partnercalc.git
-> cd ts-partnercalc
+- Git
+- Node.js 20
+
+安装依赖：
+
+```powershell
+npm install
 ```
 
-* If you're interested in contributing, please instead make a fork and track this repo as an upstream remote.
+配置环境变量：
 
-2. Install dependencies:
-
-```bash
-> npm install
+```powershell
+Copy-Item .env_dev .env
 ```
 
-3. Set environment variables:
+然后在 `.env` 中填写 FFLogs v1 API key 以及需要的 API 地址。
 
-* Rename `.env_dev` to `.env`.
-* Fill in your FFLogs v1 API key (you can find it on your [profile](https://www.fflogs.com/profile)).
+启动开发服务器：
 
-4. Launch the dev server:
-
-```bash
-> npm run serve
+```powershell
+npm run serve
 ```
 
-You should now be able to access the site at http://localhost:7000.
+默认访问：
+
+```text
+http://localhost:7000/
+```
+
+测试数据页面：
+
+```text
+http://localhost:7000/test
+```
+
+## 构建
+
+```powershell
+npm run build
+```
+
+GitHub Pages 部署时通过 `REPO_NAME` 注入子路径，例如：
+
+```powershell
+$env:REPO_NAME = 'partnercalc-ast'
+npm run build
+Remove-Item Env:\REPO_NAME
+```
+
+## 项目说明
+
+本项目由 `don-fon` 维护：
+
+https://github.com/don-fon
+
+原项目仓库：
+
+- https://github.com/hintxiv/ts-partnercalc
