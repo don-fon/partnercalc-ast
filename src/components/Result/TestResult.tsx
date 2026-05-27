@@ -6,7 +6,6 @@ import { JOBS } from 'data/jobs'
 import React, { useEffect, useMemo, useState } from 'react'
 import { Simulator } from 'simulator/simulator'
 import { ComputedWindow, OverallDamage } from 'types'
-import { formatDamage } from 'util/format'
 import { withPublicPath } from 'util/publicPath'
 import { generateFFLogsTimelineLink } from './fflogsLinks'
 import styles from './Result.module.css'
@@ -64,12 +63,6 @@ export function TestResult() {
         )
     }
 
-    const formatDPS = (damage: number) => {
-        const duration = parser.fight.end - parser.fight.start
-        const dps = damage / (duration / 1000)
-        return formatDamage(dps)
-    }
-
     if (!ready) {
         return <CircularProgress size={80} className={styles.loading} />
     }
@@ -84,7 +77,6 @@ export function TestResult() {
                 <OverallDisplay
                     damage={overall}
                     windows={windows}
-                    formatDPS={formatDPS}
                     formatTimestamp={parser.formatTimestamp}
                 />
                 {windows.map(window =>

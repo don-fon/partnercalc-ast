@@ -10,12 +10,12 @@ import { scrollToCardWindow } from '../scrollToWindow'
 interface OverallDisplayProps {
     damage: OverallDamage
     windows: ComputedWindow[]
-    formatDPS: (damage: number) => string
     formatTimestamp: (time: number) => string
 }
 
 export function OverallDisplay(props: OverallDisplayProps) {
     const maxOptimal = Math.max(...props.windows.map(window => window.bestPartner.totals.total))
+    const formatSummaryDamage = (damage: number) => `${Math.round(damage / 1000)}K`
 
     const renderCardSummary = (actual: number, optimal: number, delta: number) => {
         const items = [
@@ -31,7 +31,7 @@ export function OverallDisplay(props: OverallDisplayProps) {
                         {label}
                     </Typography>
                     <Typography className={styles.summaryMetricValue}>
-                        {props.formatDPS(value as number)}
+                        {formatSummaryDamage(value as number)}
                     </Typography>
                 </div>
             ))}
@@ -95,16 +95,16 @@ export function OverallDisplay(props: OverallDisplayProps) {
                             </div>
                         </div>
                         <div className={styles.cardDecisionTarget}>
-                            <Typography>实际 {props.formatDPS(actual.totals.total)}</Typography>
+                            <Typography>实际 {formatSummaryDamage(actual.totals.total)}</Typography>
                             <NameChip name={actual.name} job={actual.job} />
                         </div>
                         <div className={styles.cardDecisionTarget}>
-                            <Typography>最优 {props.formatDPS(best.totals.total)}</Typography>
+                            <Typography>最优 {formatSummaryDamage(best.totals.total)}</Typography>
                             <NameChip name={best.name} job={best.job} />
                         </div>
                         <div className={isOptimal ? styles.cardDecisionGood : styles.cardDecisionBad}>
                             <Typography>
-                                {isOptimal ? '命中最优' : `损失 ${props.formatDPS(loss)}`}
+                                {isOptimal ? '命中最优' : `损失 ${formatSummaryDamage(loss)}`}
                             </Typography>
                         </div>
                     </Card>
