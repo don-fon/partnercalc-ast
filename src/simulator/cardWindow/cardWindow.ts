@@ -101,6 +101,39 @@ export class CardWindow {
         })
     }
 
+    public getPlayerHitStats(playerID: number) {
+        const snapshots = this.snapshots.getPlayerSnapshots(playerID)
+        const stats = {
+            directHits: 0,
+            crits: 0,
+            hits: 0,
+        }
+
+        if (!snapshots) {
+            return stats
+        }
+
+        for (const snapshot of snapshots) {
+            for (const damage of snapshot.damage) {
+                if (damage.type !== 'direct') {
+                    continue
+                }
+
+                stats.hits += 1
+
+                if (damage.isDH) {
+                    stats.directHits += 1
+                }
+
+                if (damage.isCrit) {
+                    stats.crits += 1
+                }
+            }
+        }
+
+        return stats
+    }
+
     public processSnapshot(snapshot: Snapshot) {
         if (this.end == null) {
             this.snapshots.handleSnapshot(snapshot)

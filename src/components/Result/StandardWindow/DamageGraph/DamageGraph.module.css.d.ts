@@ -4,6 +4,7 @@ declare namespace DamageGraphModuleCssNamespace {
   export interface IDamageGraphModuleCss {
     jobIcon: string;
     standardGraph: string;
+    statLine: string;
   }
 }
 

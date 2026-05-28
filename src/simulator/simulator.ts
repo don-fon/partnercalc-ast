@@ -99,6 +99,8 @@ export class Simulator {
                     playerMap.set(player.id, {
                         ...player,
                         damage: [],
+                        stats: { ...player.stats },
+                        hitStats: { ...player.hitStats },
                         totals: { ...player.totals },
                     })
                 }
@@ -185,6 +187,8 @@ export class Simulator {
                 id: player.id,
                 name: player.name,
                 job: player.job,
+                stats: playerStats,
+                hitStats: window.getPlayerHitStats(player.id),
                 damage: computedDamage,
                 totals: damageTotals,
             })

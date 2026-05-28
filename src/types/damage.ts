@@ -1,5 +1,6 @@
 import { Action } from './action'
 import { Job } from './job'
+import { Stats } from './stats'
 
 export type CardType = 'balance' | 'spear'
 
@@ -19,10 +20,18 @@ export interface DamageTotals extends DamageTypes {
     total: number
 }
 
+export interface HitStats {
+    directHits: number
+    crits: number
+    hits: number
+}
+
 export interface ComputedPlayer {
     id: number
     name: string
     job: Job
+    stats: Stats
+    hitStats: HitStats
     damage: ComputedDamage[]
     totals: DamageTotals
 }

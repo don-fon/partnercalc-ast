@@ -36,7 +36,7 @@ export function DamageGraph(props: DamageGraphProps) {
                 margin={{
                     top: 20,
                     right: 30,
-                    left: 30,
+                    left: 120,
                     bottom: 0,
                 }}
                 layout="vertical"
@@ -52,6 +52,7 @@ export function DamageGraph(props: DamageGraphProps) {
                     dataKey="name"
                     type="category"
                     stroke="white"
+                    width={180}
                     tick={playerNameTick(props.players)}
                     tickLine={false}
                 />
@@ -107,10 +108,12 @@ const playerNameTick = (players: ComputedPlayer[]) => (props: AxisTickProps) => 
     if (player == null) { return }
 
     const label = formatPlayerAxisLabel(player.name)
+    const critRate = formatHitRate(player.hitStats.crits, player.hitStats.hits)
+    const directHitRate = formatHitRate(player.hitStats.directHits, player.hitStats.hits)
 
     return <g transform={`translate(${x},${y})`} fill="white">
         <text
-            x={-32}
+            x={-116}
             y={8}
             textAnchor="end"
         >
@@ -119,10 +122,32 @@ const playerNameTick = (players: ComputedPlayer[]) => (props: AxisTickProps) => 
         <player.job.Icon
             height={30}
             width={30}
-            x={-28}
+            x={-108}
             y={-13}
         />
+        <text
+            x={-70}
+            y={-3}
+            className={styles.statLine}
+        >
+            暴 {critRate}
+        </text>
+        <text
+            x={-70}
+            y={13}
+            className={styles.statLine}
+        >
+            直 {directHitRate}
+        </text>
     </g>
+}
+
+const formatHitRate = (hits: number, total: number) => {
+    if (total <= 0) {
+        return '--'
+    }
+
+    return `${Math.round(hits / total * 100)}%`
 }
 
 const formatPlayerAxisLabel = (name: string) => {
