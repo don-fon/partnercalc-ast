@@ -7,6 +7,7 @@ import {
     ComputedEvent,
     ComputedPlayer,
     ComputedWindow,
+    DamageCalculationMode,
     DamageTotals,
     OverallDamage,
 } from 'types'
@@ -31,11 +32,17 @@ export class Simulator {
     private enemies: EnemyHandler
     private players: PlayerHandler
     private statOverrides?: StatOverrides
+    private damageCalculationMode: DamageCalculationMode
     private cardWindows: CardWindow[] = []
     private recentDamageEvents: Array<DamageEvent | TickEvent> = []
     private results: ComputedWindow[] = []
 
-    constructor(parser: FFLogsParser, astrologian: Friend, statOverrides?: StatOverrides) {
+    constructor(
+        parser: FFLogsParser,
+        astrologian: Friend,
+        statOverrides?: StatOverrides,
+        damageCalculationMode: DamageCalculationMode = 'expected',
+    ) {
         this.parser = parser
         this.data = new DataProvider()
         this.astrologian = new Astrologian(
@@ -47,6 +54,7 @@ export class Simulator {
         )
         this.enemies = new EnemyHandler(parser.fight.friends, this.data)
         this.statOverrides = statOverrides
+        this.damageCalculationMode = damageCalculationMode
 
         const potentialTargets = parser.fight.friends.filter(player => player.id !== astrologian.id)
         this.players = new PlayerHandler(potentialTargets, this.registerNewSnapshot, this.data)
@@ -159,6 +167,7 @@ export class Simulator {
             const computedDamage = window.getPlayerContribution({
                 stats: playerStats,
                 player: player,
+                mode: this.damageCalculationMode,
             })
 
             if (computedDamage.length === 0 && player !== actualTarget) {

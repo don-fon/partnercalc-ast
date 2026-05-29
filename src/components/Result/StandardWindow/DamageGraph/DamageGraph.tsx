@@ -9,7 +9,7 @@ import {
     XAxis,
     YAxis,
 } from 'recharts'
-import { CardType, ComputedPlayer } from 'types'
+import { CardType, ComputedPlayer, DamageCalculationMode } from 'types'
 import { formatDamage } from 'util/format'
 import styles from './DamageGraph.module.css'
 import { GraphTooltip } from './Tooltip'
@@ -18,6 +18,7 @@ interface DamageGraphProps {
     players: ComputedPlayer[]
     actualPlayer: ComputedPlayer
     cardType: CardType
+    damageCalculationMode: DamageCalculationMode
 }
 
 export function DamageGraph(props: DamageGraphProps) {
@@ -53,7 +54,7 @@ export function DamageGraph(props: DamageGraphProps) {
                     type="category"
                     stroke="white"
                     width={180}
-                    tick={playerNameTick(props.players)}
+                    tick={playerNameTick(props.players, props.damageCalculationMode)}
                     tickLine={false}
                 />
                 <Tooltip
@@ -100,7 +101,10 @@ interface AxisTickProps {
     }
 }
 
-const playerNameTick = (players: ComputedPlayer[]) => (props: AxisTickProps) => {
+const playerNameTick = (
+    players: ComputedPlayer[],
+    damageCalculationMode: DamageCalculationMode,
+) => (props: AxisTickProps) => {
     const { x, y, payload } = props
 
     const player = players.find(player => player.name === payload.value)
@@ -108,8 +112,15 @@ const playerNameTick = (players: ComputedPlayer[]) => (props: AxisTickProps) => 
     if (player == null) { return }
 
     const label = formatPlayerAxisLabel(player.name)
-    const critRate = formatHitRate(player.hitStats.crits, player.hitStats.hits)
-    const directHitRate = formatHitRate(player.hitStats.directHits, player.hitStats.hits)
+    const isExpectedMode = damageCalculationMode === 'expected'
+    const critLabel = isExpectedMode ? '期暴' : '实暴'
+    const directHitLabel = isExpectedMode ? '期直' : '实直'
+    const critRate = isExpectedMode
+        ? formatRate(player.stats.critRate)
+        : formatHitRate(player.hitStats.crits, player.hitStats.hits)
+    const directHitRate = isExpectedMode
+        ? formatRate(player.stats.DHRate)
+        : formatHitRate(player.hitStats.directHits, player.hitStats.hits)
 
     return <g transform={`translate(${x},${y})`} fill="white">
         <text
@@ -130,14 +141,14 @@ const playerNameTick = (players: ComputedPlayer[]) => (props: AxisTickProps) => 
             y={-3}
             className={styles.statLine}
         >
-            暴 {critRate}
+            {critLabel} {critRate}
         </text>
         <text
             x={-70}
             y={13}
             className={styles.statLine}
         >
-            直 {directHitRate}
+            {directHitLabel} {directHitRate}
         </text>
     </g>
 }
@@ -149,6 +160,8 @@ const formatHitRate = (hits: number, total: number) => {
 
     return `${Math.round(hits / total * 100)}%`
 }
+
+const formatRate = (rate: number) => `${Math.round(rate * 100)}%`
 
 const formatPlayerAxisLabel = (name: string) => {
     const anonymousName = name.match(/^Player \((\d+)\)$/)

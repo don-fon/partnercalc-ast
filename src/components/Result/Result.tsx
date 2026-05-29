@@ -7,7 +7,8 @@ import { JOBS } from 'data/jobs'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
 import { Simulator } from 'simulator/simulator'
-import { ComputedWindow, OverallDamage } from 'types'
+import { ComputedWindow, DamageCalculationMode, OverallDamage } from 'types'
+import { DamageModeToggle } from './DamageModeToggle'
 import { generateFFLogsTimelineLink } from './fflogsLinks'
 import styles from './Result.module.css'
 import { OverallDisplay } from './StandardWindow/OverallDisplay'
@@ -22,6 +23,8 @@ export function Result() {
     const [windows, setWindows] = useState<ComputedWindow[]>([])
     const [overall, setOverall] = useState<OverallDamage>()
     const [astrologian, setAstrologian] = useState<Friend>()
+    const [damageCalculationMode, setDamageCalculationMode] =
+        useState<DamageCalculationMode>('expected')
     const asyncThrow = useAsyncError()
 
     const parser = useMemo(() => {
@@ -30,6 +33,7 @@ export function Result() {
 
     useEffect(() => {
         const simulate = async () => {
+            setReady(false)
             await parser.init()
 
             const astrologian = parser.fight.friends
@@ -49,7 +53,7 @@ export function Result() {
                 statOverrides[parseInt(friendID)] = { crit, dh }
             }
 
-            const simulator = new Simulator(parser, astrologian, statOverrides)
+            const simulator = new Simulator(parser, astrologian, statOverrides, damageCalculationMode)
             const windows = await simulator.calculateCardDamage()
 
             if (windows.length <= 0) {
@@ -61,7 +65,7 @@ export function Result() {
             setReady(true)
         }
         simulate().catch(console.error)
-    }, [asyncThrow, parser, searchParams, setReady, setWindows])
+    }, [asyncThrow, damageCalculationMode, parser, searchParams, setReady, setWindows])
 
     useEffect(() => {
         if (parser != null && astrologian != null) {
@@ -86,6 +90,12 @@ export function Result() {
 
     return <div>
         <div className={styles.fadeTop} />
+        <div className={styles.fixedModeControl}>
+            <DamageModeToggle
+                damageCalculationMode={damageCalculationMode}
+                setDamageCalculationMode={setDamageCalculationMode}
+            />
+        </div>
         <div className={styles.resultLayout}>
             <div className={styles.result}>
                 <OverallDisplay
@@ -98,6 +108,7 @@ export function Result() {
                         window={window}
                         formatTimestamp={parser.formatTimestamp}
                         generateTimestampLink={generateTimestampLink}
+                        damageCalculationMode={damageCalculationMode}
                         key={window.start}
                     />
                 )}

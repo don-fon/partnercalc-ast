@@ -6,6 +6,7 @@ export {
     ComputedPlayer,
     ComputedWindow,
     CardType,
+    DamageCalculationMode,
     DamageTotals,
     OverallDamage,
     OverallCardSummary,

@@ -2,12 +2,13 @@ import { DataProvider } from 'data/provider'
 import { simulatePotencyBuff } from 'math/rdps'
 import { SnapshotHandler } from 'simulator/handlers/snapshots'
 import { Player } from 'simulator/modules/entities/player'
-import { Action, CardType, ComputedDamage, Effect, Job, Snapshot, Stats } from 'types'
+import { Action, CardType, ComputedDamage, DamageCalculationMode, Effect, Job, Snapshot, Stats } from 'types'
 import { DamageEvent, TickEvent } from 'api/fflogs/event'
 
 export interface CardWindowInfo {
     stats: Stats
     player: Player
+    mode: DamageCalculationMode
 }
 
 export interface CardWindowEvent {
@@ -88,7 +89,7 @@ export class CardWindow {
         const effect = this.getEffectForJob(windowInfo.player.job)
 
         return snapshots.map(snapshot => {
-            const contribution = simulatePotencyBuff(snapshot, windowInfo.stats, effect)
+            const contribution = simulatePotencyBuff(snapshot, windowInfo.stats, effect, windowInfo.mode)
 
             return {
                 timestamp: snapshot.timestamp,

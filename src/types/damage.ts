@@ -3,6 +3,7 @@ import { Job } from './job'
 import { Stats } from './stats'
 
 export type CardType = 'balance' | 'spear'
+export type DamageCalculationMode = 'expected' | 'actual'
 
 interface DamageTypes {
     standard: number

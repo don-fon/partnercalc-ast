@@ -4,7 +4,10 @@ declare namespace ResultModuleCssNamespace {
   export interface IResultModuleCss {
     fadeBottom: string;
     fadeTop: string;
+    fixedModeControl: string;
     loading: string;
+    modeControl: string;
+    modeControlLabel: string;
     result: string;
     resultLayout: string;
     timelineCard: string;

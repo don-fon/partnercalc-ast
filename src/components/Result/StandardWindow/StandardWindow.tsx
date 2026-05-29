@@ -8,7 +8,7 @@ import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 import React from 'react'
-import { ComputedWindow } from 'types'
+import { ComputedWindow, DamageCalculationMode } from 'types'
 import { DamageGraph } from './DamageGraph/DamageGraph'
 import styles from './StandardWindow.module.css'
 import { TargetDpsChart } from './TargetDpsChart'
@@ -19,6 +19,7 @@ interface StandardWindowProps {
     window: ComputedWindow
     formatTimestamp: (time: number) => string
     generateTimestampLink: (start: number, end: number) => string
+    damageCalculationMode: DamageCalculationMode
 }
 
 export function StandardWindow(props: StandardWindowProps) {
@@ -49,6 +50,7 @@ export function StandardWindow(props: StandardWindowProps) {
                 players={props.window.players}
                 actualPlayer={props.window.actualPartner}
                 cardType={props.window.cardType}
+                damageCalculationMode={props.damageCalculationMode}
             />
             <Accordion className={styles.dpsAccordion}>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>

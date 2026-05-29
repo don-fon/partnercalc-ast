@@ -1,5 +1,5 @@
 import { EFFECTS } from 'data/effects'
-import { Effect, Stats } from 'types'
+import { DamageCalculationMode, Effect, Stats } from 'types'
 import { DamageInstance, DamageOptions, Snapshot } from 'types/snapshot'
 
 // TODO memoize everything here
@@ -118,6 +118,7 @@ export function simulatePotencyBuff(
     snapshot: Snapshot,
     stats: Stats,
     effect: Effect,
+    mode: DamageCalculationMode,
 ): number {
     const multiplier = effect.potency ?? 1
     const partneredStats = applyEffects(stats, snapshot.effects)
@@ -125,7 +126,9 @@ export function simulatePotencyBuff(
     let simulatedDamage = 0
 
     for (const damage of snapshot.damage) {
-        let expectedDamage = normalizeDamage(snapshot, damage, stats, partneredStats)
+        let expectedDamage = mode === 'expected'
+            ? normalizeDamage(snapshot, damage, stats, partneredStats)
+            : damage.amount
 
         if (hasBuff) {
             expectedDamage /= multiplier
