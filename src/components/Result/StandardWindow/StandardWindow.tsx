@@ -8,10 +8,11 @@ import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 import React from 'react'
-import { ComputedWindow, DamageCalculationMode } from 'types'
+import { ComputedWindow } from 'types'
+import type { DamageCalculationMode } from 'types/damage'
 import { DamageGraph } from './DamageGraph/DamageGraph'
 import styles from './StandardWindow.module.css'
-import { TargetDpsChart } from './TargetDpsChart'
+import { TargetDamagePlot } from './TargetDamagePlot'
 import { TimestampChip } from '../Chip'
 import { getWindowAnchorID } from '../scrollToWindow'
 
@@ -55,12 +56,12 @@ export function StandardWindow(props: StandardWindowProps) {
             <Accordion className={styles.dpsAccordion}>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                     <Typography>
-                        发卡目标DPS曲线
+                        发卡目标伤害点阵
                     </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                    <TargetDpsChart
-                        points={props.window.targetDps}
+                    <TargetDamagePlot
+                        events={props.window.targetDamageEvents}
                         cardType={props.window.cardType}
                         start={props.window.start}
                         end={props.window.end}

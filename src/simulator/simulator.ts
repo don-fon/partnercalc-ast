@@ -7,10 +7,10 @@ import {
     ComputedEvent,
     ComputedPlayer,
     ComputedWindow,
-    DamageCalculationMode,
     DamageTotals,
     OverallDamage,
 } from 'types'
+import type { DamageCalculationMode } from 'types/damage'
 import { CARD_CONTEXT_MS, CardWindow } from './cardWindow'
 import { Snapshot } from '../types/snapshot'
 import { EnemyHandler } from './handlers/enemies'
@@ -228,6 +228,7 @@ export class Simulator {
             bestPartner: computedPlayers[0],
             events: events,
             targetDps: window.getTargetDpsPoints(windowEnd),
+            targetDamageEvents: window.getTargetDamageEvents(windowEnd),
         }
     }
 

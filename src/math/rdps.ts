@@ -1,5 +1,6 @@
 import { EFFECTS } from 'data/effects'
-import { DamageCalculationMode, Effect, Stats } from 'types'
+import { Effect, Stats } from 'types'
+import type { DamageCalculationMode } from 'types/damage'
 import { DamageInstance, DamageOptions, Snapshot } from 'types/snapshot'
 
 // TODO memoize everything here

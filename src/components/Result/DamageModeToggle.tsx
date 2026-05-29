@@ -2,7 +2,7 @@ import ToggleButton from '@mui/material/ToggleButton'
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
 import Tooltip from '@mui/material/Tooltip'
 import React from 'react'
-import { DamageCalculationMode } from 'types'
+import type { DamageCalculationMode } from 'types/damage'
 import styles from './Result.module.css'
 
 interface DamageModeToggleProps {

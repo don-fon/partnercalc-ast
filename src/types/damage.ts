@@ -48,6 +48,16 @@ export interface ComputedDPSPoint {
     dps: number
 }
 
+export interface ComputedTargetDamageEvent {
+    timestamp: number
+    amount: number
+    actionID?: number
+    statusID?: number
+    isCrit?: boolean
+    isDH?: boolean
+    isDot?: boolean
+}
+
 export interface ComputedWindow {
     start: number
     end: number
@@ -57,6 +67,7 @@ export interface ComputedWindow {
     bestPartner: ComputedPlayer
     events: ComputedEvent[]
     targetDps: ComputedDPSPoint[]
+    targetDamageEvents: ComputedTargetDamageEvent[]
 }
 
 export interface OverallCardSummary {

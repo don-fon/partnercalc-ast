@@ -9,7 +9,8 @@ import {
     XAxis,
     YAxis,
 } from 'recharts'
-import { CardType, ComputedPlayer, DamageCalculationMode } from 'types'
+import { CardType, ComputedPlayer } from 'types'
+import type { DamageCalculationMode } from 'types/damage'
 import { formatDamage } from 'util/format'
 import styles from './DamageGraph.module.css'
 import { GraphTooltip } from './Tooltip'

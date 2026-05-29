@@ -1,8 +1,9 @@
 export { Action } from './action'
-export {
+export type {
     ComputedEvent,
     ComputedDamage,
     ComputedDPSPoint,
+    ComputedTargetDamageEvent,
     ComputedPlayer,
     ComputedWindow,
     CardType,

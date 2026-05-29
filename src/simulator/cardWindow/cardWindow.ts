@@ -2,7 +2,17 @@ import { DataProvider } from 'data/provider'
 import { simulatePotencyBuff } from 'math/rdps'
 import { SnapshotHandler } from 'simulator/handlers/snapshots'
 import { Player } from 'simulator/modules/entities/player'
-import { Action, CardType, ComputedDamage, DamageCalculationMode, Effect, Job, Snapshot, Stats } from 'types'
+import {
+    Action,
+    CardType,
+    ComputedDamage,
+    Effect,
+    Job,
+    Snapshot,
+    Stats,
+} from 'types'
+import type { ComputedTargetDamageEvent, DamageCalculationMode } from 'types/damage'
+import type { DirectDamageInstance } from 'types/snapshot'
 import { DamageEvent, TickEvent } from 'api/fflogs/event'
 
 export interface CardWindowInfo {
@@ -181,6 +191,45 @@ export class CardWindow {
         }
 
         return points
+    }
+
+    public getTargetDamageEvents(fallbackEnd: number): ComputedTargetDamageEvent[] {
+        const start = Math.max(this.start - CARD_CONTEXT_MS, this.fightStart)
+        const end = Math.min((this.end ?? fallbackEnd) + CARD_CONTEXT_MS, this.fightEnd)
+        const snapshots = this.snapshots.getPlayerSnapshots(this.target)
+
+        if (!snapshots) {
+            return []
+        }
+
+        return snapshots
+            .filter(snapshot => snapshot.timestamp >= start && snapshot.timestamp <= end)
+            .map(snapshot => {
+                const directDamage = snapshot.damage
+                    .filter((damage): damage is DirectDamageInstance => damage.type === 'direct')
+                const tickDamage = snapshot.damage
+                    .filter(damage => damage.type === 'tick')
+
+                if (directDamage.length > 0) {
+                    return directDamage.map(damage => ({
+                        timestamp: snapshot.timestamp,
+                        amount: damage.amount,
+                        actionID: snapshot.id,
+                        isCrit: damage.isCrit,
+                        isDH: damage.isDH,
+                    }))
+                }
+
+                return [{
+                    timestamp: snapshot.timestamp,
+                    amount: tickDamage.reduce((total, damage) => total + damage.amount, 0),
+                    statusID: snapshot.id,
+                    isDot: true,
+                }]
+            })
+            .flat()
+            .filter(event => event.amount > 0)
+            .sort((a, b) => a.timestamp - b.timestamp)
     }
 
     private getEffectForJob(job: Job): Effect {
