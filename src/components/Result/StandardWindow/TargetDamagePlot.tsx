@@ -10,6 +10,7 @@ interface TargetDamagePlotProps {
     start: number
     end: number
     formatTimestamp: (time: number) => string
+    formatPreciseTimestamp: (time: number) => string
 }
 
 interface IconInfo {
@@ -36,7 +37,7 @@ export function TargetDamagePlot(props: TargetDamagePlotProps) {
 
     const ticks = useMemo(() => {
         return Array.from({ length: X_AXIS_TICK_COUNT }, (_, index) => {
-            const ratio = X_AXIS_TICK_COUNT === 1 ? 0 : index / (X_AXIS_TICK_COUNT - 1)
+            const ratio = index / (X_AXIS_TICK_COUNT - 1)
             return xMin + ((xMax - xMin) * ratio)
         })
     }, [xMax, xMin])
@@ -91,12 +92,13 @@ export function TargetDamagePlot(props: TargetDamagePlotProps) {
                 const icon = key == null ? undefined : icons.get(key)
                 const left = toPercent(event.timestamp, xMin, xMax)
                 const bottom = 6 + (event.amount / maxDamage) * 82
+                const detail = formatDamageDetail(event)
 
                 return <div
                     className={styles.damagePoint}
                     key={`${event.timestamp}-${event.actionID ?? event.statusID}-${index}`}
                     style={{ left: `${left}%`, bottom: `${bottom}%` }}
-                    title={`${formatPreciseTimestamp(event.timestamp, props.start)} ${icon?.name ?? '伤害'} ${formatDamage(event.amount)}`}
+                    title={`${props.formatPreciseTimestamp(event.timestamp)} ${icon?.name ?? '伤害'} ${formatDamage(event.amount)}${detail}`}
                 >
                     <div className={styles.iconFrame}>
                         {icon?.iconUrl != null
@@ -179,10 +181,20 @@ const toPercent = (value: number, min: number, max: number) => {
     return Math.min(Math.max(((value - min) / (max - min)) * 100, 0), 100)
 }
 
-const formatPreciseTimestamp = (timestamp: number, windowStart: number) => {
-    const elapsed = Math.max(timestamp - windowStart, 0) / 1000
-    const minutes = Math.floor(elapsed / 60)
-    const seconds = elapsed - (minutes * 60)
+const formatDamageDetail = (event: ComputedTargetDamageEvent) => {
+    const details: string[] = []
 
-    return `${minutes.toString().padStart(2, '0')}:${seconds.toFixed(2).padStart(5, '0')}`
+    if (event.hitCount > 1) {
+        details.push(`${event.hitCount} 目标`)
+    }
+
+    if (event.critCount > 0) {
+        details.push(`${event.critCount} 暴击`)
+    }
+
+    if (event.directHitCount > 0) {
+        details.push(`${event.directHitCount} 直击`)
+    }
+
+    return details.length > 0 ? ` (${details.join(' / ')})` : ''
 }

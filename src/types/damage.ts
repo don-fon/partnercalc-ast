@@ -56,6 +56,9 @@ export interface ComputedTargetDamageEvent {
     isCrit?: boolean
     isDH?: boolean
     isDot?: boolean
+    hitCount: number
+    critCount: number
+    directHitCount: number
 }
 
 export interface ComputedWindow {

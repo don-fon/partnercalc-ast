@@ -19,6 +19,7 @@ import { getWindowAnchorID } from '../scrollToWindow'
 interface StandardWindowProps {
     window: ComputedWindow
     formatTimestamp: (time: number) => string
+    formatPreciseTimestamp: (time: number) => string
     generateTimestampLink: (start: number, end: number) => string
     damageCalculationMode: DamageCalculationMode
 }
@@ -66,6 +67,7 @@ export function StandardWindow(props: StandardWindowProps) {
                         start={props.window.start}
                         end={props.window.end}
                         formatTimestamp={props.formatTimestamp}
+                        formatPreciseTimestamp={props.formatPreciseTimestamp}
                     />
                 </AccordionDetails>
             </Accordion>

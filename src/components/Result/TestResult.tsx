@@ -68,6 +68,14 @@ export function TestResult() {
         )
     }
 
+    const formatPreciseTimestamp = (time: number) => {
+        const elapsed = Math.max(time - parser.fight.start, 0) / 1000
+        const minutes = Math.floor(elapsed / 60)
+        const seconds = elapsed - (minutes * 60)
+
+        return `${minutes.toString().padStart(2, '0')}:${seconds.toFixed(2).padStart(5, '0')}`
+    }
+
     if (!ready) {
         return <CircularProgress size={80} className={styles.loading} />
     }
@@ -94,6 +102,7 @@ export function TestResult() {
                     <StandardWindow
                         window={window}
                         formatTimestamp={parser.formatTimestamp}
+                        formatPreciseTimestamp={formatPreciseTimestamp}
                         generateTimestampLink={generateTimestampLink}
                         damageCalculationMode={damageCalculationMode}
                         key={window.start}

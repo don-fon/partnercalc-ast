@@ -202,7 +202,7 @@ export class CardWindow {
             return []
         }
 
-        return snapshots
+        const events = snapshots
             .filter(snapshot => snapshot.timestamp >= start && snapshot.timestamp <= end)
             .map(snapshot => {
                 const directDamage = snapshot.damage
@@ -217,6 +217,9 @@ export class CardWindow {
                         actionID: snapshot.id,
                         isCrit: damage.isCrit,
                         isDH: damage.isDH,
+                        hitCount: 1,
+                        critCount: damage.isCrit ? 1 : 0,
+                        directHitCount: damage.isDH ? 1 : 0,
                     }))
                 }
 
@@ -225,11 +228,15 @@ export class CardWindow {
                     amount: tickDamage.reduce((total, damage) => total + damage.amount, 0),
                     statusID: snapshot.id,
                     isDot: true,
+                    hitCount: 1,
+                    critCount: 0,
+                    directHitCount: 0,
                 }]
             })
             .flat()
             .filter(event => event.amount > 0)
-            .sort((a, b) => a.timestamp - b.timestamp)
+
+        return mergeTargetDamageEvents(events)
     }
 
     private getEffectForJob(job: Job): Effect {
@@ -243,4 +250,33 @@ export class CardWindow {
             potency: isCorrectTarget ? CORRECT_CARD_POTENCY : WRONG_CARD_POTENCY,
         }
     }
+}
+
+function mergeTargetDamageEvents(events: ComputedTargetDamageEvent[]): ComputedTargetDamageEvent[] {
+    const groups: Map<string, ComputedTargetDamageEvent> = new Map()
+
+    for (const event of events) {
+        const key = [
+            event.timestamp,
+            event.actionID ?? '',
+            event.statusID ?? '',
+            event.isDot ? 'dot' : 'direct',
+        ].join(':')
+        const existing = groups.get(key)
+
+        if (existing == null) {
+            groups.set(key, { ...event })
+            continue
+        }
+
+        existing.amount += event.amount
+        existing.hitCount += event.hitCount
+        existing.critCount += event.critCount
+        existing.directHitCount += event.directHitCount
+        existing.isCrit = existing.isCrit || event.isCrit
+        existing.isDH = existing.isDH || event.isDH
+    }
+
+    return [...groups.values()]
+        .sort((a, b) => a.timestamp - b.timestamp)
 }
